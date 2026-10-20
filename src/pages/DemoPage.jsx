@@ -2,6 +2,7 @@ import { useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import BusinessTemplate from '../templates/BusinessTemplate';
 import ErrorPage from '../components/ErrorPage';
+import { agency } from '../data/agency';
 import { getDemoById } from '../data/demoBusinesses';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
 import { validateBusinessData } from '../utils/validation';
@@ -19,7 +20,7 @@ export default function DemoPage() {
   useDocumentMeta({
     title: isAvailable
       ? `Demo · ${business.name} — ${business.sector}`
-      : 'Demostración no encontrada · WebLocal',
+      : `Demostración no encontrada · ${agency.name}`,
     description: isAvailable
       ? `Propuesta conceptual de sitio web para ${business.name}, ${business.sector} en ${business.location}.`
       : 'La demostración solicitada no existe o no está disponible.',

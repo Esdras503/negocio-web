@@ -5,11 +5,12 @@ import ProcessSection from '../components/home/ProcessSection';
 import ValueSection from '../components/home/ValueSection';
 import ClosingCta from '../components/home/ClosingCta';
 import SiteFooter from '../components/home/SiteFooter';
+import { agency } from '../data/agency';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
 
 export default function Home() {
   useDocumentMeta({
-    title: 'WebLocal — Sitios web para negocios de El Salvador',
+    title: `${agency.name} — Sitios web para negocios de El Salvador`,
     description:
       'Diseño de páginas web para negocios de El Salvador. Explora demostraciones adaptables para restaurantes, cafés, barberías y más.',
     robots: 'index,follow',

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import BrandMark from '../BrandMark';
 import Icon from '../Icon';
+import { agency } from '../../data/agency';
 import {
   buildMapUrl,
   buildPhoneHref,
@@ -95,11 +96,11 @@ export default function BusinessFooter({ business, mode }) {
             {mode === 'demo' ? (
               <>
                 Demostración conceptual · Datos ficticios ·{' '}
-                <Link to="/">Creada por WebLocal</Link>
+                <Link to="/">Creada por {agency.name}</Link>
               </>
             ) : (
               <>
-                Sitio creado por <Link to="/">WebLocal</Link>
+                Sitio creado por <Link to="/">{agency.name}</Link>
               </>
             )}
           </span>

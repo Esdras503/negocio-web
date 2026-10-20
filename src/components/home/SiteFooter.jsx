@@ -12,7 +12,14 @@ export default function SiteFooter() {
         <div className="studio-footer__grid">
           <div className="studio-footer__brand">
             <a className="studio-brand studio-brand--footer" href="#inicio">
-              <BrandMark name={agency.name} text="W" className="brand-mark--studio" />
+              <BrandMark
+                name={agency.name}
+                image={agency.logo.src}
+                imageAlt={agency.logo.alt}
+                imageWidth={agency.logo.width}
+                imageHeight={agency.logo.height}
+                className="brand-mark--studio brand-mark--logo brand-mark--logo-footer"
+              />
               <span className="studio-brand__text">
                 <strong>{agency.name}</strong>
                 <small>Estudio web</small>

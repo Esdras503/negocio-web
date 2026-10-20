@@ -52,6 +52,25 @@
   text-transform: uppercase;
 }
 
+.studio-brand .brand-mark--logo {
+  width: 46px;
+  height: 46px;
+  border-radius: 0;
+  background: transparent;
+}
+
+.studio-brand--footer .brand-mark--logo {
+  width: 54px;
+  height: 54px;
+  border-radius: 14px;
+  background: var(--studio-cream);
+}
+
+.studio-brand--footer .brand-mark--logo img {
+  width: 42px;
+  height: auto;
+}
+
 .studio-nav {
   display: flex;
   align-items: center;

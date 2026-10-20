@@ -1,9 +1,10 @@
 import ErrorPage from '../components/ErrorPage';
+import { agency } from '../data/agency';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
 
 export default function NotFound() {
   useDocumentMeta({
-    title: 'Página no encontrada · WebLocal',
+    title: `Página no encontrada · ${agency.name}`,
     description: 'La página que buscas no existe o cambió de dirección.',
     robots: 'noindex,nofollow',
   });

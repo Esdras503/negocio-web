@@ -18,7 +18,14 @@ export default function SiteHeader() {
     <header className="studio-header">
       <div className="studio-container studio-header__inner">
         <a className="studio-brand" href="#inicio" onClick={close}>
-          <BrandMark name={agency.name} text="W" className="brand-mark--studio" />
+          <BrandMark
+            name={agency.name}
+            image={agency.logo.src}
+            imageAlt={agency.logo.alt}
+            imageWidth={agency.logo.width}
+            imageHeight={agency.logo.height}
+            className="brand-mark--studio brand-mark--logo"
+          />
           <span className="studio-brand__text">
             <strong>{agency.name}</strong>
             <small>Estudio web</small>

@@ -1,4 +1,4 @@
-# WebLocal
+# Nexobyte
 
 Estudio web para negocios de El Salvador. El proyecto incluye una página principal y una plantilla reutilizable con tres demostraciones completas:
 
