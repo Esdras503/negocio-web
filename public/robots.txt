@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /demo/
+
+# Las demostraciones son propuestas conceptuales y no deben indexarse.
