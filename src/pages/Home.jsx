@@ -12,7 +12,7 @@ export default function Home() {
   useDocumentMeta({
     title: `${agency.name} — Sitios web para negocios de El Salvador`,
     description:
-      'Diseño de páginas web para negocios de El Salvador. Explora demostraciones adaptables para restaurantes, cafés, barberías y más.',
+      'Diseño de páginas web para negocios de El Salvador. Explora demostraciones para restaurantes, cafeterías, barberías, servicios técnicos y más.',
     robots: 'index,follow',
   });
 

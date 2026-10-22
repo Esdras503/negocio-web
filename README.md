@@ -43,6 +43,7 @@ src/
     agency.js       Nombre, ubicación y contacto del estudio
     businessModel.js
     demoBusinesses.js
+    demoCatalog.js  Categorías y disponibilidad del catálogo del inicio
     demos/          Contenido y tema de cada demostración
   pages/            Inicio, demo y página no encontrada
   styles/           global.css, home.css, business.css y el CSS de cada demo
@@ -62,6 +63,16 @@ public/
 
 Cada plantilla recibe el mismo objeto de negocio validado, pero organiza el contenido, la navegación y los componentes con su propio criterio. La plantilla genérica anterior se conserva como respaldo para datos sin una plantilla registrada.
 
+## Catálogo de la página principal
+
+La sección de demostraciones del inicio se alimenta de `src/data/demoCatalog.js`. Cada categoría declara su nombre, descripción, ejemplos de negocios, imagen y un `demoId` opcional.
+
+- Si `demoId` coincide con una demostración registrada, la tarjeta muestra el estado **Demo disponible** y enlaza a su ruta real.
+- Si no existe `demoId`, la tarjeta muestra **Próximamente** y no genera ningún enlace. Esto evita dirigir visitantes a páginas inexistentes.
+- Para publicar una nueva demo, primero se crea su negocio, se registra en `demoBusinesses.js` y luego se asigna su `demoId` en el catálogo.
+
+El catálogo actual incluye nueve categorías: tres con demostración funcional y seis en preparación. No se añadieron filtros porque las nueve tarjetas se presentan en una cuadrícula clara de tres columnas en escritorio y una columna en móvil.
+
 ## Agregar o editar una demostración
 
 1. Crear un archivo en `src/data/demos/` usando `createBusiness`.
@@ -76,7 +87,7 @@ Los colores, las tipografías y los radios se declaran en `theme`; cada plantill
 
 Esta base todavía no incluye personalizador visual, autenticación, base de datos, publicación de sitios ni enlaces de compartición persistidos. Los enlaces actuales son URLs de demostración: para conservar cambios entre dispositivos hará falta un backend.
 
-Las imágenes de las demos provienen de bancos de imágenes (Pexels/Unsplash) y fueron convertidas a WebP. Antes de usarlas en un sitio comercial, confirma sus licencias y reemplázalas por material autorizado del cliente.
+Las imágenes de las demos provienen de bancos de imágenes (Pexels/Unsplash) y fueron convertidas a WebP. Las fotografías de las nuevas categorías del catálogo están en `public/images/catalog/`. Antes de usarlas en un sitio comercial, confirma sus licencias y reemplázalas por material autorizado del cliente.
 
 ## Despliegue
 

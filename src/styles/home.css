@@ -497,14 +497,52 @@
     var(--studio-sand);
 }
 
-.demo-grid {
+.catalog-intro {
+  max-width: 440px;
+  margin-bottom: 5px;
+}
+
+.catalog-intro > p {
+  color: var(--studio-muted);
+  font-size: 0.96rem;
+  line-height: 1.8;
+}
+
+.catalog-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 17px;
+}
+
+.catalog-summary span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 12px;
+  border: 1px solid var(--studio-line);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--studio-white) 62%, transparent);
+  color: var(--studio-muted);
+  font-size: 0.71rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.catalog-summary strong {
+  color: var(--studio-green);
+  font-weight: 800;
+}
+
+.catalog-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 22px;
   margin-top: 44px;
 }
 
-.demo-card {
+.catalog-card {
+  display: flex;
   overflow: hidden;
   border: 1px solid var(--studio-line);
   border-radius: 22px;
@@ -515,37 +553,46 @@
     transform 0.25s ease;
 }
 
-.demo-card:hover {
-  border-color: color-mix(in srgb, var(--demo-accent) 42%, var(--studio-line));
+.catalog-card--available:hover {
+  border-color: color-mix(in srgb, var(--catalog-accent) 42%, var(--studio-line));
   box-shadow: 0 24px 48px rgba(20, 37, 28, 0.11);
   transform: translateY(-5px);
 }
 
-.demo-card__link {
+.catalog-card--pending {
+  background: color-mix(in srgb, var(--studio-white) 72%, var(--studio-sand));
+}
+
+.catalog-card--pending:hover {
+  border-color: #c9c5b9;
+}
+
+.catalog-card__link {
   display: flex;
   height: 100%;
+  flex: 1;
   flex-direction: column;
 }
 
-.demo-card__media {
+.catalog-card__media {
   position: relative;
-  aspect-ratio: 4 / 3;
   overflow: hidden;
+  aspect-ratio: 4 / 3;
   background: #d9ded6;
 }
 
-.demo-card__media img {
+.catalog-card__media img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.65s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
-.demo-card:hover .demo-card__media img {
+.catalog-card--available:hover .catalog-card__media img {
   transform: scale(1.04);
 }
 
-.demo-card__badge {
+.catalog-card__status {
   position: absolute;
   top: 14px;
   left: 14px;
@@ -553,117 +600,177 @@
   align-items: center;
   gap: 6px;
   padding: 6px 10px;
-  border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.9);
-  color: var(--studio-ink);
-  backdrop-filter: blur(6px);
   font-size: 0.63rem;
   font-weight: 800;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.07em;
+  line-height: 1.2;
   text-transform: uppercase;
 }
 
-.demo-card__badge::before {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--demo-accent);
-  content: '';
+.catalog-card__status--available {
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--studio-ink);
+  backdrop-filter: blur(6px);
 }
 
-.demo-card__body {
+.catalog-card__status--available svg {
+  color: var(--studio-green);
+}
+
+.catalog-card__status--pending {
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(20, 37, 28, 0.84);
+  color: #ffffff;
+  backdrop-filter: blur(6px);
+}
+
+.catalog-card__body {
   display: flex;
   flex: 1;
   flex-direction: column;
-  padding: 23px 24px 21px;
+  padding: 22px 24px 21px;
 }
 
-.demo-card__sector {
-  color: color-mix(in srgb, var(--demo-accent) 55%, var(--studio-ink));
-  font-size: 0.64rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+.catalog-card__title {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
 }
 
-.demo-card h3 {
-  margin-top: 7px;
+.catalog-card__index {
+  flex: 0 0 auto;
+  color: color-mix(in srgb, var(--catalog-accent) 55%, var(--studio-ink));
   font-family: var(--font-display);
-  font-size: 1.65rem;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+.catalog-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
   font-weight: 500;
   letter-spacing: -0.035em;
-  line-height: 1.06;
+  line-height: 1.1;
+  text-wrap: balance;
 }
 
-.demo-card__body > p {
-  display: -webkit-box;
-  overflow: hidden;
+.catalog-card__description {
   margin-top: 10px;
   color: var(--studio-muted);
-  font-size: 0.88rem;
-  line-height: 1.7;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
+  font-size: 0.86rem;
+  line-height: 1.65;
 }
 
-.demo-card__footer {
+.catalog-card__examples {
+  margin-top: 12px;
+  margin-bottom: 18px;
+  color: #59665e;
+  font-size: 0.69rem;
+  line-height: 1.6;
+  list-style: none;
+}
+
+.catalog-card__examples li {
+  display: inline;
+}
+
+.catalog-card__examples li + li::before {
+  margin: 0 6px;
+  color: color-mix(in srgb, var(--catalog-accent) 45%, var(--studio-muted));
+  content: '·';
+}
+
+.catalog-card__footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
   margin-top: auto;
-  padding-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--studio-line);
 }
 
-.demo-card__swatches {
-  display: flex;
-  align-items: center;
-  padding-left: 7px;
+.catalog-card__demo {
+  overflow: hidden;
+  color: var(--studio-muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.demo-card__swatches span {
-  width: 18px;
-  height: 18px;
-  margin-left: -7px;
-  border: 2px solid var(--studio-white);
-  border-radius: 50%;
-  box-shadow: 0 0 0 1px var(--studio-line);
-}
-
-.demo-card__swatch--light {
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.07) !important;
-}
-
-.demo-card__open {
-  display: flex;
+.catalog-card__cta {
+  display: inline-flex;
+  flex: 0 0 auto;
   align-items: center;
   gap: 6px;
   color: var(--studio-green);
-  font-size: 0.78rem;
+  font-size: 0.77rem;
   font-weight: 800;
   transition: gap 0.2s ease;
 }
 
-.demo-card:hover .demo-card__open {
+.catalog-card--available:hover .catalog-card__cta {
   gap: 10px;
 }
 
-.demo-grid__note {
+.catalog-card__soon {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #667168;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.catalog-card__soon svg {
+  color: #7b857d;
+}
+
+.catalog-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 30px;
+  margin-top: 30px;
+  padding-top: 22px;
+  border-top: 1px solid var(--studio-line);
+}
+
+.catalog-note {
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  max-width: 690px;
-  margin-top: 26px;
-  color: #737c75;
-  font-size: 0.76rem;
+  max-width: 700px;
+  color: #59665e;
+  font-size: 0.75rem;
   line-height: 1.65;
 }
 
-.demo-grid__note svg {
+.catalog-note svg {
   flex: 0 0 auto;
   margin-top: 1px;
   color: var(--studio-green);
+}
+
+.catalog-whatsapp {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--studio-green);
+  font-size: 0.76rem;
+  font-weight: 800;
+  line-height: 1.45;
+  transition: color 0.18s ease;
+}
+
+.catalog-whatsapp:hover {
+  color: var(--studio-green-dark);
 }
 
 /* Process */
@@ -1090,22 +1197,12 @@
     max-width: 610px;
   }
 
-  .demo-grid {
+  .catalog-intro {
+    max-width: 610px;
+  }
+
+  .catalog-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .demo-card:last-child {
-    grid-column: 1 / -1;
-  }
-
-  .demo-card:last-child .demo-card__link {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .demo-card:last-child .demo-card__media {
-    min-height: 340px;
-    aspect-ratio: auto;
   }
 
   .studio-values__inner {
@@ -1203,22 +1300,9 @@
     padding: 72px 0;
   }
 
-  .demo-grid {
+  .catalog-grid {
     grid-template-columns: 1fr;
     margin-top: 34px;
-  }
-
-  .demo-card:last-child {
-    grid-column: auto;
-  }
-
-  .demo-card:last-child .demo-card__link {
-    display: flex;
-  }
-
-  .demo-card:last-child .demo-card__media {
-    min-height: 0;
-    aspect-ratio: 4 / 3;
   }
 
   .studio-closing__panel {
@@ -1335,7 +1419,7 @@
     font-size: clamp(2rem, 9vw, 2.8rem);
   }
 
-  .demo-card__body {
+  .catalog-card__body {
     padding: 20px;
   }
 

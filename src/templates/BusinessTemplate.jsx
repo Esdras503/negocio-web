@@ -1,6 +1,12 @@
+import ArquitecturaTemplate from './ArquitecturaTemplate';
+import AutomotrizTemplate from './AutomotrizTemplate';
 import BarberiaTemplate from './BarberiaTemplate';
+import BienesRaicesTemplate from './BienesRaicesTemplate';
 import CafeTemplate from './CafeTemplate';
 import PupuseriaTemplate from './PupuseriaTemplate';
+import SaludTemplate from './SaludTemplate';
+import ServiciosTemplate from './ServiciosTemplate';
+import TiendaTemplate from './TiendaTemplate';
 import BusinessAbout from '../components/business/BusinessAbout';
 import BusinessContact from '../components/business/BusinessContact';
 import BusinessCta from '../components/business/BusinessCta';
@@ -32,6 +38,12 @@ const templates = {
   pupuseria: PupuseriaTemplate,
   cafe: CafeTemplate,
   barberia: BarberiaTemplate,
+  automotriz: AutomotrizTemplate,
+  servicios: ServiciosTemplate,
+  arquitectura: ArquitecturaTemplate,
+  inmobiliaria: BienesRaicesTemplate,
+  salud: SaludTemplate,
+  tienda: TiendaTemplate,
 };
 
 /**

@@ -11,6 +11,125 @@ const ICONS = {
       <path d="M8 7h9v9" />
     </>
   ),
+  'arrow-left': (
+    <>
+      <path d="M20 12H5" />
+      <path d="m11 6-6 6 6 6" />
+    </>
+  ),
+  'chevron-down': <path d="m6 9 6 6 6-6" />,
+  search: (
+    <>
+      <circle cx="11" cy="11" r="7" />
+      <path d="m20 20-3.5-3.5" />
+    </>
+  ),
+  filter: (
+    <>
+      <path d="M4 6h16M7 12h10M10 18h4" />
+    </>
+  ),
+  wrench: (
+    <path d="M14.5 6.5a4 4 0 0 0-5 5L4 17v3h3l5.5-5.5a4 4 0 0 0 5-5l-2.5 2.5-3-3 2.5-2.5Z" />
+  ),
+  car: (
+    <>
+      <path d="M5 17h14M6 17v2M18 17v2M4 13l2-5h12l2 5v4H4v-4Z" />
+      <circle cx="7.5" cy="14" r="1" />
+      <circle cx="16.5" cy="14" r="1" />
+    </>
+  ),
+  gauge: (
+    <>
+      <path d="M4 18a8 8 0 1 1 16 0" />
+      <path d="m12 14 4-4" />
+      <circle cx="12" cy="14" r="1" />
+    </>
+  ),
+  bolt: <path d="m13 2-9 12h7l-1 8 9-12h-7l1-8Z" />,
+  droplet: <path d="M12 2s7 7.5 7 12a7 7 0 0 1-14 0C5 9.5 12 2 12 2Z" />,
+  wind: (
+    <>
+      <path d="M3 8h11a3 3 0 1 0-3-3" />
+      <path d="M3 12h15a2 2 0 1 1-2 2" />
+      <path d="M3 16h8a2.5 2.5 0 1 1-2.5 2.5" />
+    </>
+  ),
+  home: (
+    <>
+      <path d="m3 11 9-8 9 8" />
+      <path d="M5 10v10h14V10" />
+      <path d="M9 20v-6h6v6" />
+    </>
+  ),
+  building: (
+    <>
+      <rect x="5" y="3" width="14" height="18" rx="1" />
+      <path d="M9 7h1M14 7h1M9 11h1M14 11h1M9 15h1M14 15h1M10 21v-3h4v3" />
+    </>
+  ),
+  ruler: (
+    <>
+      <path d="m3 17 14-14 4 4L7 21l-4-4Z" />
+      <path d="m8 12 2 2M11 9l2 2M14 6l2 2" />
+    </>
+  ),
+  calendar: (
+    <>
+      <rect x="3" y="5" width="18" height="16" rx="2" />
+      <path d="M8 3v4M16 3v4M3 10h18" />
+    </>
+  ),
+  bed: (
+    <>
+      <path d="M3 20v-8h18v8M3 16h18" />
+      <path d="M6 12V8h5v4M13 12V8h5v4" />
+    </>
+  ),
+  bath: (
+    <>
+      <path d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4v-3Z" />
+      <path d="M6 12V6a2 2 0 0 1 4 0" />
+      <path d="m6 20-1 2M18 20l1 2" />
+    </>
+  ),
+  area: (
+    <>
+      <path d="M4 4h6M4 4v6M20 4h-6M20 4v6M4 20h6M4 20v-6M20 20h-6M20 20v-6" />
+    </>
+  ),
+  cart: (
+    <>
+      <circle cx="9" cy="20" r="1.5" />
+      <circle cx="18" cy="20" r="1.5" />
+      <path d="M3 4h2l2.5 11h10L20 7H6" />
+    </>
+  ),
+  plus: <path d="M12 5v14M5 12h14" />,
+  minus: <path d="M5 12h14" />,
+  trash: (
+    <>
+      <path d="M4 7h16M9 7V4h6v3M6 7l1 14h10l1-14M10 11v6M14 11v6" />
+    </>
+  ),
+  heart: (
+    <path d="M20.8 5.8a5.5 5.5 0 0 0-7.8 0L12 6.9l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 22l8.8-8.4a5.5 5.5 0 0 0 0-7.8Z" />
+  ),
+  star: (
+    <path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3Z" />
+  ),
+  clipboard: (
+    <>
+      <rect x="5" y="4" width="14" height="17" rx="2" />
+      <path d="M9 4V2h6v2M8 9h8M8 13h8M8 17h5" />
+    </>
+  ),
+  send: (
+    <>
+      <path d="m22 2-7 20-4-9-9-4 20-7Z" />
+      <path d="M22 2 11 13" />
+    </>
+  ),
   check: <path d="m4.5 12 4.5 4.5L19.5 6" />,
   pin: (
     <>

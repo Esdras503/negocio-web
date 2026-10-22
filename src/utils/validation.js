@@ -1,4 +1,4 @@
-import { SECTION_KEYS, TEMPLATE_KEYS } from '../data/businessModel';
+import { CUSTOM_TEMPLATE_KEYS, SECTION_KEYS, TEMPLATE_KEYS } from '../data/businessModel';
 import { fontStacks, isHexColor, radiusValues } from './theme';
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -59,16 +59,89 @@ function validateContactNumbers(contact, errors) {
 }
 
 /**
+ * Validación común de las plantillas con composición propia. Cada una conserva
+ * su propio contenido y estructura; aquí solo se comprueba la información
+ * mínima que comparten la portada, el contacto y la ficha del catálogo.
+ */
+function validateCustomDemoData(business) {
+  const errors = [];
+
+  if (!SLUG_PATTERN.test(business.id ?? '')) {
+    errors.push('id debe ser un identificador en minúsculas separado por guiones.');
+  }
+  pushRequired(errors, business.name, 'name', 2);
+  pushRequired(errors, business.sector, 'sector', 2);
+  pushRequired(errors, business.location, 'location', 2);
+
+  if (!TEMPLATE_KEYS.includes(business.template)) {
+    errors.push(`template debe ser uno de: ${TEMPLATE_KEYS.join(', ')}.`);
+  }
+
+  if (!business.logo?.text?.trim()) {
+    errors.push('logo.text es obligatorio para las plantillas personalizadas.');
+  }
+
+  const theme = business.theme ?? {};
+  ['primary', 'primaryDark', 'accent', 'background', 'surface', 'ink', 'muted'].forEach(
+    (key) => {
+      if (!isHexColor(theme[key])) {
+        errors.push(`theme.${key} debe ser un color hexadecimal de seis dígitos.`);
+      }
+    },
+  );
+  if (!fontStacks[theme.headingFont]) {
+    errors.push('theme.headingFont debe ser una tipografía configurada.');
+  }
+  if (!fontStacks[theme.bodyFont]) {
+    errors.push('theme.bodyFont debe ser una tipografía configurada.');
+  }
+  if (!radiusValues[theme.radius]) {
+    errors.push('theme.radius debe ser "sharp", "soft" o "round".');
+  }
+
+  const hero = business.hero ?? {};
+  ['eyebrow', 'title', 'titleAccent', 'description'].forEach((key) =>
+    pushRequired(errors, hero[key], `hero.${key}`, 2),
+  );
+  validateImage(hero.image, 'hero.image', errors);
+  pushRequired(errors, hero.primaryCta?.label, 'hero.primaryCta.label', 2);
+  pushRequired(errors, hero.secondaryCta?.label, 'hero.secondaryCta.label', 2);
+
+  const contact = business.contact ?? {};
+  ['whatsappLabel', 'whatsappMessage', 'address'].forEach((key) =>
+    pushRequired(errors, contact[key], `contact.${key}`, 2),
+  );
+  validateContactNumbers(contact, errors);
+
+  if (!Array.isArray(contact.hours) || contact.hours.length < 1) {
+    errors.push('contact.hours debe incluir al menos un horario.');
+  } else {
+    contact.hours.forEach((entry, index) => {
+      pushRequired(errors, entry?.days, `contact.hours[${index}].days`, 2);
+      pushRequired(errors, entry?.time, `contact.hours[${index}].time`, 2);
+    });
+  }
+
+  pushRequired(errors, business.footer?.tagline, 'footer.tagline', 5);
+
+  return { valid: errors.length === 0, errors };
+}
+
+/**
  * Validación estructural del contenido de un negocio. No valida que una
  * imagen exista en disco, pero sí que el modelo sea coherente antes de
  * publicar una demo o guardar una propuesta.
  */
 export function validateBusinessData(business) {
-  const errors = [];
-
   if (!business || typeof business !== 'object') {
     return { valid: false, errors: ['La configuración del negocio no es un objeto válido.'] };
   }
+
+  if (CUSTOM_TEMPLATE_KEYS.includes(business.template)) {
+    return validateCustomDemoData(business);
+  }
+
+  const errors = [];
 
   if (!SLUG_PATTERN.test(business.id ?? '')) {
     errors.push('id debe ser un identificador en minúsculas separado por guiones.');

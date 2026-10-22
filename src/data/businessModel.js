@@ -7,7 +7,30 @@
 
 export const SECTION_KEYS = ['about', 'services', 'gallery', 'contact'];
 
-export const TEMPLATE_KEYS = ['pupuseria', 'cafe', 'barberia'];
+export const TEMPLATE_KEYS = [
+  'pupuseria',
+  'cafe',
+  'barberia',
+  'automotriz',
+  'servicios',
+  'arquitectura',
+  'inmobiliaria',
+  'salud',
+  'tienda',
+];
+
+/**
+ * Plantillas con composición propia. No usan el modelo genérico de secciones
+ * porque cada sector tiene una estructura y una experiencia distintas.
+ */
+export const CUSTOM_TEMPLATE_KEYS = [
+  'automotriz',
+  'servicios',
+  'arquitectura',
+  'inmobiliaria',
+  'salud',
+  'tienda',
+];
 
 export const SECTION_LABELS = {
   about: 'Nosotros',
