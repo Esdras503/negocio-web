@@ -1,4 +1,4 @@
-import { SECTION_KEYS } from '../data/businessModel';
+import { SECTION_KEYS, TEMPLATE_KEYS } from '../data/businessModel';
 import { fontStacks, isHexColor, radiusValues } from './theme';
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -76,6 +76,10 @@ export function validateBusinessData(business) {
   pushRequired(errors, business.name, 'name', 2);
   pushRequired(errors, business.sector, 'sector', 2);
   pushRequired(errors, business.location, 'location', 2);
+
+  if (business.template !== undefined && !TEMPLATE_KEYS.includes(business.template)) {
+    errors.push(`template debe ser uno de: ${TEMPLATE_KEYS.join(', ')}.`);
+  }
 
   if (!business.logo || (!business.logo.text?.trim() && !business.logo.image)) {
     errors.push('logo debe incluir un texto o una imagen.');

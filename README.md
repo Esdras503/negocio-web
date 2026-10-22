@@ -1,10 +1,10 @@
 # Nexobyte
 
-Estudio web para negocios de El Salvador. El proyecto incluye una página principal y una plantilla reutilizable con tres demostraciones completas:
+Estudio web para negocios de El Salvador. El proyecto incluye una página principal y tres demostraciones completas, cada una con identidad visual y plantilla propias:
 
-- Pupusería: `/demo/el-comal-de-casa`
-- Café: `/demo/cafe-nube`
-- Barbería: `/demo/barberia-don-rafael`
+- Pupusería: `/demo/el-comal-de-casa` — cálida, artesanal y familiar.
+- Café: `/demo/cafe-nube` — editorial, cinematográfica y de especialidad.
+- Barbería: `/demo/barberia-don-rafael` — oscura, clásica y directa.
 
 Las demostraciones usan nombres, precios, direcciones y teléfonos ficticios. Están marcadas con `noindex` y no representan sitios publicados de clientes.
 
@@ -37,7 +37,7 @@ npm run preview
 ```text
 src/
   components/
-    business/       Componentes de la plantilla de negocio
+    business/       Componentes compartidos y legado de la plantilla genérica
     home/           Secciones de la página del estudio
   data/
     agency.js       Nombre, ubicación y contacto del estudio
@@ -45,21 +45,32 @@ src/
     demoBusinesses.js
     demos/          Contenido y tema de cada demostración
   pages/            Inicio, demo y página no encontrada
-  styles/           global.css, home.css y business.css
-  templates/        BusinessTemplate.jsx
+  styles/           global.css, home.css, business.css y el CSS de cada demo
+  templates/        Selector y plantillas de pupusería, café y barbería
   utils/            Navegación, tema y validación
 public/
   images/           Imágenes WebP de las demostraciones
 ```
+
+## Plantillas de demostración
+
+`src/templates/BusinessTemplate.jsx` lee `business.template` y elige la plantilla correspondiente:
+
+- `pupuseria` → `PupuseriaTemplate.jsx` + `styles/pupuseria.css`
+- `cafe` → `CafeTemplate.jsx` + `styles/cafe.css`
+- `barberia` → `BarberiaTemplate.jsx` + `styles/barberia.css`
+
+Cada plantilla recibe el mismo objeto de negocio validado, pero organiza el contenido, la navegación y los componentes con su propio criterio. La plantilla genérica anterior se conserva como respaldo para datos sin una plantilla registrada.
 
 ## Agregar o editar una demostración
 
 1. Crear un archivo en `src/data/demos/` usando `createBusiness`.
 2. Mantener el contenido, las imágenes y el tema dentro de ese objeto.
 3. Registrar la demostración en `src/data/demoBusinesses.js`.
-4. Verificar que `validateBusinessData` no reporte errores al abrir `/demo/:slug`.
+4. Elegir una de las plantillas disponibles en `template`.
+5. Verificar que `validateBusinessData` no reporte errores al abrir `/demo/:slug`.
 
-Los colores, la tipografía, el estilo del héroe y los radios se configuran en `theme`. La plantilla reutiliza ese tema mediante variables CSS.
+Los colores, las tipografías y los radios se declaran en `theme`; cada plantilla los consume mediante variables CSS (`--brand`, `--accent`, `--bg`, `--heading-font`, etc.).
 
 ## Alcance actual
 

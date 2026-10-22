@@ -7,6 +7,8 @@
 
 export const SECTION_KEYS = ['about', 'services', 'gallery', 'contact'];
 
+export const TEMPLATE_KEYS = ['pupuseria', 'cafe', 'barberia'];
+
 export const SECTION_LABELS = {
   about: 'Nosotros',
   services: 'Servicios',

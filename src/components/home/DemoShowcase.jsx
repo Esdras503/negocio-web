@@ -12,8 +12,9 @@ export default function DemoShowcase() {
             <h2>Una base sólida. Tres identidades distintas.</h2>
           </div>
           <p>
-            Sitios completos creados con la misma plantilla y adaptados al
-            carácter de cada negocio. Entra, navega y revisa cada detalle.
+            Tres sitios completos, cada uno con su propia identidad visual,
+            su menú y su forma de contar el negocio. Entra, navega y revisa
+            cada detalle.
           </p>
         </div>
 

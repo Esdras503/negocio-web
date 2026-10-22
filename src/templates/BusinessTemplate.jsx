@@ -1,3 +1,6 @@
+import BarberiaTemplate from './BarberiaTemplate';
+import CafeTemplate from './CafeTemplate';
+import PupuseriaTemplate from './PupuseriaTemplate';
 import BusinessAbout from '../components/business/BusinessAbout';
 import BusinessContact from '../components/business/BusinessContact';
 import BusinessCta from '../components/business/BusinessCta';
@@ -25,11 +28,24 @@ function renderSection(section, business) {
   }
 }
 
+const templates = {
+  pupuseria: PupuseriaTemplate,
+  cafe: CafeTemplate,
+  barberia: BarberiaTemplate,
+};
+
 /**
- * Plantilla única para todos los negocios. Recibe un objeto de datos ya
- * validado y decide qué secciones mostrar, en qué orden y con qué tema.
+ * Punto de entrada de las demostraciones. Cada negocio se renderiza con la
+ * plantilla propia de su identidad; la plantilla genérica queda como respaldo
+ * para datos sin una plantilla registrada.
  */
 export default function BusinessTemplate({ business, mode = 'demo' }) {
+  const Template = templates[business.template];
+
+  if (Template) {
+    return <Template business={business} mode={mode} />;
+  }
+
   const sections = getVisibleSections(business);
   const themeStyles = resolveThemeStyles(business.theme);
 
