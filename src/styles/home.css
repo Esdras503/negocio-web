@@ -569,6 +569,7 @@
 
 .catalog-card__link {
   display: flex;
+  min-width: 0;
   height: 100%;
   flex: 1;
   flex-direction: column;
@@ -707,15 +708,33 @@
   display: inline-flex;
   flex: 0 0 auto;
   align-items: center;
-  gap: 6px;
-  color: var(--studio-green);
+  gap: 7px;
+  min-height: 40px;
+  padding: 9px 14px;
+  border-radius: 999px;
+  background-color: var(--studio-green);
+  color: var(--studio-white);
   font-size: 0.77rem;
   font-weight: 800;
-  transition: gap 0.2s ease;
+  line-height: 1.2;
+  white-space: nowrap;
+  transition:
+    background-color 0.22s ease,
+    box-shadow 0.22s ease;
 }
 
-.catalog-card--available:hover .catalog-card__cta {
-  gap: 10px;
+@media (hover: hover) and (pointer: fine) {
+  .catalog-card__cta:hover {
+    background-color: var(--studio-green-dark);
+    box-shadow: 0 6px 16px rgba(20, 62, 42, 0.2);
+  }
+}
+
+.catalog-card__link:focus-visible .catalog-card__cta {
+  background-color: var(--studio-green-dark);
+  box-shadow:
+    0 0 0 2px var(--studio-white),
+    0 0 0 4px var(--studio-green-dark);
 }
 
 .catalog-card__soon {
