@@ -159,4 +159,18 @@ export const demoCategories = [
       height: 750,
     },
   },
+  {
+    id: 'gimnasios-fitness',
+    name: 'Gimnasios y fitness',
+    description:
+      'Energía, servicios, planes y una galería que muestra el espacio antes de la primera visita.',
+    examples: [
+      'Gimnasios',
+      'Entrenamiento personal',
+      'Clases grupales',
+      'Estudios de fitness',
+    ],
+    demoId: 'iron-district',
+    imagePosition: 'center 55%',
+  },
 ];

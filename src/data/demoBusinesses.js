@@ -5,6 +5,7 @@ import { clinicaBrisa } from './demos/clinicaBrisa';
 import { comalDeCasa } from './demos/comalDeCasa';
 import { estudioAlba } from './demos/estudioAlba';
 import { habitaInmobiliaria } from './demos/habitaInmobiliaria';
+import { ironDistrict } from './demos/ironDistrict';
 import { lumaTienda } from './demos/lumaTienda';
 import { torqueNorte } from './demos/torqueNorte';
 
@@ -18,6 +19,7 @@ export const demoBusinesses = [
   habitaInmobiliaria,
   clinicaBrisa,
   lumaTienda,
+  ironDistrict,
 ];
 
 export function getDemoById(id) {

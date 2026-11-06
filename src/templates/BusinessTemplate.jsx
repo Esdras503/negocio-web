@@ -3,6 +3,7 @@ import AutomotrizTemplate from './AutomotrizTemplate';
 import BarberiaTemplate from './BarberiaTemplate';
 import BienesRaicesTemplate from './BienesRaicesTemplate';
 import CafeTemplate from './CafeTemplate';
+import GimnasioTemplate from './GimnasioTemplate';
 import PupuseriaTemplate from './PupuseriaTemplate';
 import SaludTemplate from './SaludTemplate';
 import ServiciosTemplate from './ServiciosTemplate';
@@ -44,6 +45,7 @@ const templates = {
   inmobiliaria: BienesRaicesTemplate,
   salud: SaludTemplate,
   tienda: TiendaTemplate,
+  gimnasio: GimnasioTemplate,
 };
 
 /**

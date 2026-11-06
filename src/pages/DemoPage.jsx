@@ -7,9 +7,9 @@ import { getDemoById } from '../data/demoBusinesses';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
 import { validateBusinessData } from '../utils/validation';
 
-export default function DemoPage() {
+export default function DemoPage({ demoId }) {
   const { slug } = useParams();
-  const business = getDemoById(slug);
+  const business = getDemoById(demoId ?? slug);
   const validation = useMemo(
     () => (business ? validateBusinessData(business) : { valid: false, errors: [] }),
     [business],

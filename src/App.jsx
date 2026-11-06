@@ -11,6 +11,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/demo/:slug" element={<DemoPage />} />
+        <Route path="/demos/gimnasio" element={<DemoPage demoId="iron-district" />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>

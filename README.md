@@ -1,10 +1,17 @@
 # Nexobyte
 
-Estudio web para negocios de El Salvador. El proyecto incluye una página principal y tres demostraciones completas, cada una con identidad visual y plantilla propias:
+Estudio web para negocios de El Salvador. El proyecto incluye una página principal y diez demostraciones completas, cada una con identidad visual y plantilla propias:
 
 - Pupusería: `/demo/el-comal-de-casa` — cálida, artesanal y familiar.
 - Café: `/demo/cafe-nube` — editorial, cinematográfica y de especialidad.
 - Barbería: `/demo/barberia-don-rafael` — oscura, clásica y directa.
+- Taller automotriz: `/demo/torque-norte` — técnica, industrial y precisa.
+- Servicios para el hogar: `/demo/casalista` — clara, confiable y cercana.
+- Arquitectura: `/demo/estudio-alba` — serena, espacial y editorial.
+- Inmobiliaria: `/demo/habita` — luminosa, aspiracional y ordenada.
+- Salud y bienestar: `/demo/clinica-brisa` — fresca, clínica y humana.
+- Tienda de diseño: `/demo/luma` — cálida, editorial y de producto.
+- Gimnasio: `/demo/iron-district` — oscura, atlética y de alto contraste. También disponible en el alias `/demos/gimnasio`.
 
 Las demostraciones usan nombres, precios, direcciones y teléfonos ficticios. Están marcadas con `noindex` y no representan sitios publicados de clientes.
 
@@ -47,7 +54,7 @@ src/
     demos/          Contenido y tema de cada demostración
   pages/            Inicio, demo y página no encontrada
   styles/           global.css, home.css, business.css y el CSS de cada demo
-  templates/        Selector y plantillas de pupusería, café y barbería
+  templates/        Selector y plantillas personalizadas por sector
   utils/            Navegación, tema y validación
 public/
   images/           Imágenes WebP de las demostraciones
@@ -60,6 +67,13 @@ public/
 - `pupuseria` → `PupuseriaTemplate.jsx` + `styles/pupuseria.css`
 - `cafe` → `CafeTemplate.jsx` + `styles/cafe.css`
 - `barberia` → `BarberiaTemplate.jsx` + `styles/barberia.css`
+- `automotriz` → `AutomotrizTemplate.jsx` + `styles/automotriz.css`
+- `servicios` → `ServiciosTemplate.jsx` + `styles/servicios.css`
+- `arquitectura` → `ArquitecturaTemplate.jsx` + `styles/arquitectura.css`
+- `inmobiliaria` → `BienesRaicesTemplate.jsx` + `styles/bienes-raices.css`
+- `salud` → `SaludTemplate.jsx` + `styles/salud.css`
+- `tienda` → `TiendaTemplate.jsx` + `styles/tienda.css`
+- `gimnasio` → `GimnasioTemplate.jsx` + `styles/gimnasio.css`
 
 Cada plantilla recibe el mismo objeto de negocio validado, pero organiza el contenido, la navegación y los componentes con su propio criterio. La plantilla genérica anterior se conserva como respaldo para datos sin una plantilla registrada.
 
@@ -71,7 +85,7 @@ La sección de demostraciones del inicio se alimenta de `src/data/demoCatalog.js
 - Si no existe `demoId`, la tarjeta muestra **Próximamente** y no genera ningún enlace. Esto evita dirigir visitantes a páginas inexistentes.
 - Para publicar una nueva demo, primero se crea su negocio, se registra en `demoBusinesses.js` y luego se asigna su `demoId` en el catálogo.
 
-El catálogo actual incluye nueve categorías: tres con demostración funcional y seis en preparación. No se añadieron filtros porque las nueve tarjetas se presentan en una cuadrícula clara de tres columnas en escritorio y una columna en móvil.
+El catálogo actual incluye diez categorías, todas con una demostración funcional. Las tarjetas se presentan en una cuadrícula clara de tres columnas en escritorio y una columna en móvil.
 
 ## Agregar o editar una demostración
 
@@ -91,6 +105,6 @@ Las imágenes de las demos provienen de bancos de imágenes (Pexels/Unsplash) y 
 
 ## Despliegue
 
-El proyecto está preparado para desplegarse en Vercel. `vercel.json` incluye una reescritura para que las rutas `/demo/:slug` funcionen al abrirlas directamente. El directorio de salida es `dist/`.
+El proyecto está preparado para desplegarse en Vercel. `vercel.json` incluye una reescritura catch-all para que las rutas del SPA, incluidas `/demo/:slug` y el alias `/demos/gimnasio`, funcionen al abrirlas directamente. El directorio de salida es `dist/`.
 
 No se ha realizado ningún despliegue de producción desde este repositorio.

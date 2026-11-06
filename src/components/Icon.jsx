@@ -260,6 +260,35 @@ const ICONS = {
       <path d="m19 15 .8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15Z" />
     </>
   ),
+  dumbbell: (
+    <>
+      <path d="M6 8v8M3 10v4M18 8v8M21 10v4M6 12h12" />
+    </>
+  ),
+  activity: <path d="M3 12h4l2.2-7 4.2 14 2.4-7H21" />,
+  target: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <circle cx="12" cy="12" r="5" />
+      <circle cx="12" cy="12" r="1" />
+    </>
+  ),
+  instagram: (
+    <>
+      <rect x="3" y="3" width="18" height="18" rx="5" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none" />
+    </>
+  ),
+  facebook: (
+    <path d="M14 8h3V4h-3a4 4 0 0 0-4 4v3H7v4h3v7h4v-7h3l1-4h-4V8Z" />
+  ),
+  youtube: (
+    <>
+      <rect x="2.5" y="5.5" width="19" height="13" rx="3" />
+      <path d="m10 9 5 3-5 3V9Z" />
+    </>
+  ),
 };
 
 export default function Icon({ name, size = 20, className, title }) {

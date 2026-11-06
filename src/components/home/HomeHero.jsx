@@ -37,6 +37,7 @@ function DemoPreview({ business, className = '' }) {
 
 export default function HomeHero() {
   const [featured, second, third] = demoBusinesses;
+  const demoCount = demoBusinesses.length;
   const whatsappHref = buildAgencyWhatsAppUrl(agency);
 
   return (
@@ -99,15 +100,18 @@ export default function HomeHero() {
             <DemoPreview business={third} className="hero-mosaic__tile--bottom" />
           </div>
 
-          <div className="studio-hero__badge">
+          <a className="studio-hero__badge" href="#demos">
             <span className="studio-hero__badge-mark" aria-hidden="true">
               <Icon name="sparkles" size={17} />
             </span>
             <span>
-              <strong>Una base, tres identidades</strong>
-              <small>Explora cada propuesta</small>
+              <strong>Una base, {demoCount} identidades</strong>
+              <small>
+                Explora las {demoCount} propuestas
+                <Icon name="arrow-right" size={12} />
+              </small>
             </span>
-          </div>
+          </a>
         </div>
       </div>
     </section>

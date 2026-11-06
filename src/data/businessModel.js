@@ -17,6 +17,7 @@ export const TEMPLATE_KEYS = [
   'inmobiliaria',
   'salud',
   'tienda',
+  'gimnasio',
 ];
 
 /**
@@ -30,6 +31,7 @@ export const CUSTOM_TEMPLATE_KEYS = [
   'inmobiliaria',
   'salud',
   'tienda',
+  'gimnasio',
 ];
 
 export const SECTION_LABELS = {
