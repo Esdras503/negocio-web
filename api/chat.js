@@ -2,6 +2,13 @@ import { createHash, randomUUID } from 'node:crypto';
 import { GoogleGenAI } from '@google/genai';
 import { SYSTEM_PROMPT } from './_lib/nexobyteKnowledge.js';
 import { checkRateLimit } from './_lib/rateLimit.js';
+import {
+  countWords,
+  finishTokenTruncatedReply,
+  getReplyWordLimit,
+  limitReplyLength,
+} from './_lib/responseLimit.js';
+import { getTopicGuardReply } from './_lib/topicGuard.js';
 
 const DEFAULT_MODEL = 'gemini-3.5-flash';
 const MODEL_PATTERN = /^[a-z0-9][a-z0-9._-]*$/i;
@@ -10,7 +17,7 @@ const MAX_HISTORY_MESSAGES = 8;
 const MAX_HISTORY_ITEM_LENGTH = 1_000;
 const MAX_HISTORY_CHARS = 3_200;
 const MAX_BODY_BYTES = 16 * 1024;
-const MAX_OUTPUT_TOKENS = 700;
+const MAX_OUTPUT_TOKENS = 180;
 const REQUEST_TIMEOUT_MS = 22_000;
 
 let cachedClient = null;
@@ -415,6 +422,16 @@ export default async function handler(req, res) {
     return;
   }
 
+  const topicGuard = getTopicGuardReply(requestData.message);
+  if (topicGuard) {
+    console.info('[api/chat] topic guard applied', {
+      requestId,
+      kind: topicGuard.kind,
+    });
+    sendJson(res, 200, { reply: topicGuard.reply }, rateHeaders);
+    return;
+  }
+
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 
@@ -425,16 +442,17 @@ export default async function handler(req, res) {
       contents: buildContents(requestData.history, requestData.message),
       config: {
         systemInstruction: SYSTEM_PROMPT,
-        temperature: 0.6,
-        topP: 0.9,
+        temperature: 0.3,
+        topP: 0.8,
         maxOutputTokens: MAX_OUTPUT_TOKENS,
-        thinkingConfig: { thinkingLevel: 'low' },
+        thinkingConfig: { thinkingLevel: 'minimal' },
         abortSignal: controller.signal,
         httpOptions: { timeout: REQUEST_TIMEOUT_MS },
       },
     });
 
-    const reply = typeof response.text === 'string' ? response.text.trim() : '';
+    const rawReply =
+      typeof response.text === 'string' ? response.text.trim() : '';
     const candidate = response.candidates?.[0];
     const blockedFinish =
       candidate?.finishReason &&
@@ -442,7 +460,7 @@ export default async function handler(req, res) {
         candidate.finishReason,
       );
 
-    if (!reply || blockedFinish) {
+    if (!rawReply || blockedFinish) {
       console.warn('[api/chat] empty or blocked response', {
         requestId,
         finishReason: candidate?.finishReason ?? 'unavailable',
@@ -457,7 +475,37 @@ export default async function handler(req, res) {
       return;
     }
 
-    sendJson(res, 200, { reply }, rateHeaders);
+    const reply = limitReplyLength(rawReply, requestData.message);
+    const finalReply =
+      candidate?.finishReason === 'MAX_TOKENS'
+        ? finishTokenTruncatedReply(reply)
+        : reply;
+    const replyLimit = getReplyWordLimit(requestData.message);
+
+    if (!finalReply) {
+      console.warn('[api/chat] empty response after length guard', {
+        requestId,
+      });
+      sendError(
+        res,
+        422,
+        'EMPTY_RESPONSE',
+        'No pude generar una respuesta para esa consulta. ¿Quieres preguntar algo sobre tu negocio o nuestras demos?',
+        rateHeaders,
+      );
+      return;
+    }
+
+    if (finalReply !== rawReply) {
+      console.info('[api/chat] reply shortened to keep it concise', {
+        requestId,
+        originalWords: countWords(rawReply),
+        limit: replyLimit,
+        tokenLimited: candidate?.finishReason === 'MAX_TOKENS',
+      });
+    }
+
+    sendJson(res, 200, { reply: finalReply }, rateHeaders);
   } catch (error) {
     const timedOut =
       controller.signal.aborted ||

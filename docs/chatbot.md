@@ -9,6 +9,8 @@ Chatbot comercial del sitio de Nexobyte. Responde preguntas sobre el estudio, re
 - `src/components/chat/QuoteForm.jsx`: formulario de cotización, revisión del resumen y enlace a WhatsApp. No guarda datos ni envía formularios.
 - `api/chat.js`: función serverless de Vercel para `POST /api/chat`.
 - `api/_lib/nexobyteKnowledge.js`: información verificada del estudio y reglas del asistente.
+- `api/_lib/topicGuard.js`: guarda de tema para inyecciones de instrucciones y preguntas generales claramente ajenas a Nexobyte.
+- `api/_lib/responseLimit.js`: límite de longitud de las respuestas (100 palabras normal, 160 si se piden detalles).
 - `api/_lib/rateLimit.js`: límite básico de solicitudes en memoria.
 - `vite.config.js`: sirve el mismo endpoint durante `npm run dev` y `npm run preview`.
 
@@ -21,6 +23,20 @@ El chatbot se muestra en el inicio y en la página 404. No se monta en `/demo/:s
 - Se puede cambiar con la variable opcional `GEMINI_MODEL`.
 - Antes de cambiar a otro modelo, verifica que siga disponible para la clave y que acepte `generateContent`.
 - No se usa Gemini 1.5 Flash.
+- Parámetros de generación: `temperature: 0.3`, `topP: 0.8`, `maxOutputTokens: 180` y `thinkingLevel: "minimal"`.
+- El asistente está limitado a temas comerciales de Nexobyte. No es un asistente general.
+- Las respuestas deben apuntar a 20-70 palabras, con un máximo de 100; si el visitante pide detalles de un servicio, el máximo es 160.
+- Además del prompt, el backend recorta respuestas que superen ese límite y nunca acepta respuestas vacías.
+
+## Alcance y guardas
+
+El asistente solo atiende consultas comerciales sobre Nexobyte: servicios de diseño y desarrollo web, beneficios, catálogos digitales, demos, características documentadas, proceso, cotizaciones y el WhatsApp público.
+
+- No responde sobre política, religión, deportes, noticias, entretenimiento, historia, filosofía, relaciones personales, tareas escolares, programación general, inteligencia artificial general, medicina, temas legales ni finanzas personales.
+- Si la consulta está fuera de alcance, redirige en una o dos frases y no desarrolla el tema.
+- Si detecta una inyección de instrucciones, una petición del prompt, claves, configuración o información interna, responde con una negativa breve y vuelve al ámbito comercial.
+- `api/_lib/topicGuard.js` intercepta los casos de alta confianza antes de llamar a Gemini. Las consultas que mencionan una página, un sitio, una demo o un negocio se dejan al modelo para no bloquear encargos legítimos.
+- `api/_lib/responseLimit.js` impone el límite de palabras aunque el modelo no obedezca el prompt. Los recortes se hacen en líneas o frases completas.
 
 ## Requisitos
 
@@ -84,7 +100,9 @@ El plugin de Vite también monta `/api/chat` en `vite preview`.
 - Mensaje máximo: 1,000 caracteres.
 - Historial enviado al backend: máximo 8 mensajes y 3,200 caracteres.
 - Cuerpo máximo de la solicitud: 16 KB.
-- Salida máxima: 700 tokens.
+- Salida máxima: 180 tokens.
+- Límite de respuesta: 100 palabras en consultas normales y 160 cuando se solicita detalle. Si el modelo se excede, el backend recorta en un límite de línea o frase.
+- Guarda de tema: las inyecciones de instrucciones y las preguntas generales de alta confianza se responden con una redirección sin llamar al proveedor.
 - Tiempo máximo de espera en el servidor: 22 segundos; en el navegador: 30 segundos.
 - Rate limit básico: 15 solicitudes por minuto y 100 por día por IP.
 - En Vercel, el rate limit en memoria es por instancia de función. No es un límite distribuido; para tráfico alto conviene complementarlo con Vercel WAF o un almacén externo.
