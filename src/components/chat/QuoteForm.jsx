@@ -210,7 +210,7 @@ export default function QuoteForm({ onBack }) {
 
       <form className="chat-quote__form" onSubmit={handleReview} noValidate>
         <div className="chat-quote__field">
-          <label htmlFor="chat-quote-name">Tu nombre (opcional)</label>
+          <label htmlFor="chat-quote-name">Tu nombre</label>
           <input
             ref={nameRef}
             id="chat-quote-name"
@@ -226,7 +226,7 @@ export default function QuoteForm({ onBack }) {
 
         <div className="chat-quote__field">
           <label htmlFor="chat-quote-business">
-            Nombre del negocio (opcional)
+            Nombre del negocio
           </label>
           <input
             id="chat-quote-business"
@@ -244,7 +244,7 @@ export default function QuoteForm({ onBack }) {
 
         <div className="chat-quote__field">
           <label htmlFor="chat-quote-business-type">
-            Tipo de negocio (opcional)
+            Tipo de negocio
           </label>
           <select
             id="chat-quote-business-type"
@@ -265,7 +265,7 @@ export default function QuoteForm({ onBack }) {
 
         <div className="chat-quote__field">
           <label htmlFor="chat-quote-page-type">
-            Tipo de página (opcional)
+            Tipo de página
           </label>
           <select
             id="chat-quote-page-type"
@@ -284,7 +284,7 @@ export default function QuoteForm({ onBack }) {
 
         <div className="chat-quote__field">
           <label htmlFor="chat-quote-description">
-            Cuéntanos qué necesitas (opcional)
+            Cuéntanos qué necesitas
           </label>
           <textarea
             id="chat-quote-description"
@@ -317,7 +317,7 @@ export default function QuoteForm({ onBack }) {
 
         <div className="chat-quote__field">
           <label htmlFor="chat-quote-preferred">
-            Medio de contacto preferido (opcional)
+            Medio de contacto preferido
           </label>
           <select
             id="chat-quote-preferred"
