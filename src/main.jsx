@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import './styles/global.css';
 import './styles/home.css';
 import './styles/business.css';
+import './styles/chat.css';
 import App from './App.jsx';
 import AppErrorBoundary from './components/AppErrorBoundary.jsx';
 

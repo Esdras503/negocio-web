@@ -17,7 +17,7 @@ Las demostraciones usan nombres, precios, direcciones y teléfonos ficticios. Es
 
 ## Requisitos
 
-- Node.js `^20.19.0` o `>=22.12.0` (probado con Node 24.15.0)
+- Node.js `>=22.12.0` (probado con Node 24.15.0)
 - npm
 
 ## Desarrollo local
@@ -42,22 +42,28 @@ npm run preview
 ## Estructura
 
 ```text
+api/
+  chat.js             Endpoint serverless del Asistente Nexobyte
+  _lib/               Conocimiento y rate limit del chatbot
+docs/
+  chatbot.md          Configuración, seguridad y pruebas del asistente
 src/
   components/
-    business/       Componentes compartidos y legado de la plantilla genérica
-    home/           Secciones de la página del estudio
+    business/         Componentes compartidos y legado de la plantilla genérica
+    chat/             Ventana, mensajes y formulario de cotización
+    home/             Secciones de la página del estudio
   data/
-    agency.js       Nombre, ubicación y contacto del estudio
+    agency.js         Nombre, ubicación y contacto del estudio
     businessModel.js
     demoBusinesses.js
-    demoCatalog.js  Categorías y disponibilidad del catálogo del inicio
-    demos/          Contenido y tema de cada demostración
-  pages/            Inicio, demo y página no encontrada
-  styles/           global.css, home.css, business.css y el CSS de cada demo
-  templates/        Selector y plantillas personalizadas por sector
-  utils/            Navegación, tema y validación
+    demoCatalog.js    Categorías y disponibilidad del catálogo del inicio
+    demos/            Contenido y tema de cada demostración
+  pages/              Inicio, demo y página no encontrada
+  styles/             global.css, home.css, business.css, chat.css y el CSS de cada demo
+  templates/          Selector y plantillas personalizadas por sector
+  utils/              Navegación, tema y validación
 public/
-  images/           Imágenes WebP de las demostraciones
+  images/             Imágenes WebP de las demostraciones
 ```
 
 ## Plantillas de demostración
@@ -87,6 +93,17 @@ La sección de demostraciones del inicio se alimenta de `src/data/demoCatalog.js
 
 El catálogo actual incluye diez categorías, todas con una demostración funcional. Las tarjetas se presentan en una cuadrícula clara de tres columnas en escritorio y una columna en móvil.
 
+## Asistente Nexobyte
+
+La página principal incluye un chat flotante que responde preguntas sobre Nexobyte, recomienda las demostraciones existentes y ayuda a preparar una solicitud de cotización. Se oculta dentro de las demos para no interferir con su presentación.
+
+- Endpoint: `POST /api/chat`.
+- Backend: función serverless en `api/chat.js`.
+- Modelo: `gemini-3.5-flash` mediante el SDK oficial `@google/genai`.
+- Variable obligatoria: `GEMINI_API_KEY` (solo en el servidor).
+- Configuración local y en Vercel, límites y pruebas: ver [`docs/chatbot.md`](docs/chatbot.md).
+- No guarda conversaciones ni datos del formulario de cotización. La solicitud se revisa en el navegador y se abre en WhatsApp para que el visitante decida enviarla.
+
 ## Agregar o editar una demostración
 
 1. Crear un archivo en `src/data/demos/` usando `createBusiness`.
@@ -107,4 +124,6 @@ Las imágenes de las demos provienen de bancos de imágenes (Pexels/Unsplash) y 
 
 El proyecto está preparado para desplegarse en Vercel. `vercel.json` incluye una reescritura catch-all para que las rutas del SPA, incluidas `/demo/:slug` y el alias `/demos/gimnasio`, funcionen al abrirlas directamente. El directorio de salida es `dist/`.
 
-No se ha realizado ningún despliegue de producción desde este repositorio.
+Para producción, configura `GEMINI_API_KEY` en las variables de entorno de Vercel; el chatbot no funcionará sin ella. Los pasos están en [`docs/chatbot.md`](docs/chatbot.md).
+
+No se ha realizado ningún despliegue de producción desde este repositorio. Los cambios no se publican automáticamente.
