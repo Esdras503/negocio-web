@@ -68,7 +68,7 @@ const OFF_TOPIC_PATTERNS = [
 ];
 
 const WEB_CONTEXT_PATTERN =
-  /\b(?:p[aá]gina|sitio|web|nexobyte|demo|cat[aá]logo|cotizaci[oó]n|presupuesto|dise[nñ]o|desarrollo|men[uú]|whatsapp|formulario|contacto)\b/i;
+  /\b(?:p[aá]gina|sitio|web|nexobyte|demo|cat[aá]logo|cotizaci[oó]n|presupuesto|dise[nñ]o|desarrollo|men[uú]|whatsapp|formulario|contacto|chatbot)\b/i;
 
 const OFF_TOPIC_REDIRECT =
   'Mi función es ayudarte con los servicios de Nexobyte y las páginas web para tu negocio. Si quieres, puedo mostrarte una demo o preparar una cotización.';

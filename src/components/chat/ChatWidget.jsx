@@ -9,7 +9,7 @@ const MAX_MESSAGE_LENGTH = 1_000;
 const CLIENT_TIMEOUT_MS = 30_000;
 
 const WELCOME_MESSAGE =
-  '¡Hola! 👋 Soy el Asistente Nexobyte. Estoy aquí para ayudarte a descubrir cómo una página web puede impulsar tu negocio. ¿Qué tipo de negocio tienes o qué te gustaría crear?';
+  '¡Hola! 👋 Soy el Asistente Nexobyte. Estoy aquí para ayudarte a descubrir cómo una página web puede impulsar tu negocio. También puedo contarte nuestros planes y precios. ¿Qué tipo de negocio tienes o qué te gustaría crear?';
 
 const QUICK_PROMPTS = [
   {
@@ -21,12 +21,12 @@ const QUICK_PROMPTS = [
     message: '¿Qué demos tienen disponibles?',
   },
   {
-    label: 'Quiero una página web',
-    message: 'Quiero una página web para mi negocio.',
+    label: 'Ver planes y precios',
+    message: '¿Cuáles son los planes y precios de Nexobyte?',
   },
   {
-    label: 'Consultar información',
-    message: 'Quisiera más información sobre Nexobyte.',
+    label: 'Quiero una página web',
+    message: 'Quiero una página web para mi negocio.',
   },
 ];
 

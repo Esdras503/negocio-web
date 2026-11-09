@@ -48,8 +48,8 @@ export default function ProcessSection() {
 
         <p className="process-note">
           <Icon name="shield" size={17} />
-          Las condiciones de dominio, hosting y mantenimiento se acuerdan antes
-          de publicar cada proyecto.
+          El dominio y el hosting se cotizan aparte. El mantenimiento es
+          opcional y sus condiciones se acuerdan antes de publicar.
         </p>
       </div>
     </section>

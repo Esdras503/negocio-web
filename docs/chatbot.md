@@ -1,14 +1,19 @@
 # Asistente Nexobyte
 
-Chatbot comercial del sitio de Nexobyte. Responde preguntas sobre el estudio, recomienda demos existentes, orienta al visitante hacia el servicio adecuado y prepara solicitudes de cotización para enviarlas por WhatsApp.
+Chatbot comercial del sitio de Nexobyte. Responde preguntas sobre el estudio, recomienda demos existentes, orienta al visitante hacia el plan adecuado, explica los precios oficiales y prepara solicitudes de cotización para enviarlas por WhatsApp.
 
 ## Arquitectura
 
 - `src/components/chat/ChatWidget.jsx`: botón flotante, ventana de conversación, estados y envío de mensajes.
 - `src/components/chat/ChatMessageText.jsx`: render seguro de texto y enlaces generados por el modelo. No usa `dangerouslySetInnerHTML`.
-- `src/components/chat/QuoteForm.jsx`: formulario de cotización, revisión del resumen y enlace a WhatsApp. No guarda datos ni envía formularios.
+- `src/components/chat/QuoteForm.jsx`: formulario de cotización del chat, revisión del resumen y enlace a WhatsApp. No guarda datos ni envía formularios.
+- `src/components/home/PricingSection.jsx`: sección **Planes y precios**, comparación, mantenimiento, servicios adicionales y preguntas frecuentes.
+- `src/components/home/PricingQuoteDialog.jsx`: formulario de cotización de la sección de precios. Identifica el plan seleccionado, muestra un resumen y abre WhatsApp.
+- `src/data/pricing.js`: fuente única de planes, precios, mantenimiento, servicios adicionales, comparación y preguntas comerciales. La usan la interfaz y el prompt del asistente.
+- `src/data/quoteOptions.js`: opciones de tipo de negocio y medio de contacto para los formularios.
+- `src/styles/pricing.css`: estilos de la sección y del diálogo de cotización.
 - `api/chat.js`: función serverless de Vercel para `POST /api/chat`.
-- `api/_lib/nexobyteKnowledge.js`: información verificada del estudio y reglas del asistente.
+- `api/_lib/nexobyteKnowledge.js`: información verificada del estudio, planes, precios y reglas del asistente. Genera la parte comercial desde `src/data/pricing.js`.
 - `api/_lib/topicGuard.js`: guarda de tema para inyecciones de instrucciones y preguntas generales claramente ajenas a Nexobyte.
 - `api/_lib/responseLimit.js`: límite de longitud de las respuestas (100 palabras normal, 160 si se piden detalles).
 - `api/_lib/rateLimit.js`: límite básico de solicitudes en memoria.
@@ -25,18 +30,38 @@ El chatbot se muestra en el inicio y en la página 404. No se monta en `/demo/:s
 - No se usa Gemini 1.5 Flash.
 - Parámetros de generación: `temperature: 0.3`, `topP: 0.8`, `maxOutputTokens: 180` y `thinkingLevel: "minimal"`.
 - El asistente está limitado a temas comerciales de Nexobyte. No es un asistente general.
-- Las respuestas deben apuntar a 20-70 palabras, con un máximo de 100; si el visitante pide detalles de un servicio, el máximo es 160.
+- Las respuestas deben apuntar a 20-70 palabras, con un máximo de 100; si el visitante pide detalles de un servicio o un plan, el máximo es 160.
 - Además del prompt, el backend recorta respuestas que superen ese límite y nunca acepta respuestas vacías.
 
 ## Alcance y guardas
 
-El asistente solo atiende consultas comerciales sobre Nexobyte: servicios de diseño y desarrollo web, beneficios, catálogos digitales, demos, características documentadas, proceso, cotizaciones y el WhatsApp público.
+El asistente solo atiende consultas comerciales sobre Nexobyte: servicios de diseño y desarrollo web, beneficios, catálogos digitales, demos, características documentadas, planes y precios oficiales, mantenimiento, servicios adicionales, proceso, cotizaciones y el WhatsApp público.
 
 - No responde sobre política, religión, deportes, noticias, entretenimiento, historia, filosofía, relaciones personales, tareas escolares, programación general, inteligencia artificial general, medicina, temas legales ni finanzas personales.
 - Si la consulta está fuera de alcance, redirige en una o dos frases y no desarrolla el tema.
 - Si detecta una inyección de instrucciones, una petición del prompt, claves, configuración o información interna, responde con una negativa breve y vuelve al ámbito comercial.
-- `api/_lib/topicGuard.js` intercepta los casos de alta confianza antes de llamar a Gemini. Las consultas que mencionan una página, un sitio, una demo o un negocio se dejan al modelo para no bloquear encargos legítimos.
+- `api/_lib/topicGuard.js` intercepta los casos de alta confianza antes de llamar a Gemini. Las consultas que mencionan una página, un sitio, una demo o un chatbot se dejan al modelo para no bloquear encargos legítimos.
 - `api/_lib/responseLimit.js` impone el límite de palabras aunque el modelo no obedezca el prompt. Los recortes se hacen en líneas o frases completas.
+
+## Planes y precios
+
+La única fuente comercial es `src/data/pricing.js`. La sección de inicio y el prompt del asistente se generan desde ahí:
+
+- Plan Esencial: $149, pago único.
+- Plan Profesional: $299, pago único.
+- Plan Catálogo Digital: $399, pago único y marcado como **Más recomendado**.
+- Plan Tienda Online: desde $699, pago único.
+- Desarrollo personalizado: desde $900, según evaluación técnica.
+- Mantenimiento Básico: $15/mes; Profesional: $25/mes; Premium: $40/mes. Es opcional.
+- Servicios adicionales: página adicional $35, 10 productos adicionales $20, menú QR $35, WhatsApp adicional $15, galería $30, formulario avanzado $35, chatbot con IA desde $180, reservas desde $100, segundo idioma desde $80 y rediseño desde $100.
+
+Reglas comerciales:
+
+- No se inventan descuentos, promociones, precios ni inclusiones.
+- El catálogo digital no incluye carrito, inventario automatizado ni pagos en línea.
+- El mantenimiento no es obligatorio y no incluye cambios ilimitados.
+- Dominio, alojamiento, correo, pasarelas de pago, comisiones y servicios externos se cotizan aparte.
+- Los precios son de referencia en USD; la cotización final depende del alcance.
 
 ## Requisitos
 
@@ -112,24 +137,29 @@ El plugin de Vite también monta `/api/chat` en `vite preview`.
 
 ## Cotizaciones
 
-El botón **Preparar cotización** permite completar campos opcionales, revisar un resumen y abrir WhatsApp con el mensaje preparado. El sitio:
+El chatbot conserva el botón **Preparar cotización** y la sección **Planes y precios** agrega **Contratar este plan** y **Solicitar cotización**. Ambos flujos permiten completar campos opcionales, revisar un resumen y abrir WhatsApp con el mensaje preparado. El sitio:
 
 - No guarda los datos del formulario.
 - No envía la solicitud automáticamente.
 - No afirma que la solicitud fue recibida.
 - Usa el WhatsApp público configurado en `src/data/agency.js`.
+- Identifica automáticamente el plan cuando se pulsa **Contratar este plan**.
+- Permite consultar por WhatsApp cada plan, el mantenimiento y cada servicio adicional.
 
 ## Pruebas realizadas
 
-- El botón flotante aparece en el inicio.
-- El chat abre, minimiza, cierra y reinicia la conversación.
-- Se envían mensajes y Gemini responde desde el backend.
-- Se verificó que la clave no aparece en `dist/`.
-- Se comprobó que el asistente conoce los servicios y demos reales.
-- El asistente no inventa precios y remite a cotización.
-- Se manejan mensajes vacíos, errores del proveedor y tiempos de espera.
-- La ventana se revisó en escritorio y móvil, sin desbordamiento horizontal.
-- El chat no aparece en las rutas de demostración.
+- `npm run lint` y `npm run build` finalizan correctamente.
+- La sección **Planes y precios** renderiza los cuatro planes estándar con sus precios, el desarrollo personalizado, la comparación, el mantenimiento, los diez servicios adicionales y las siete preguntas frecuentes.
+- Los precios y el enlace de WhatsApp coinciden entre la interfaz y el prompt generado desde `src/data/pricing.js`.
+- **Contratar este plan** abre el formulario con el plan preseleccionado y el resumen incluye el plan, el negocio y el mensaje de WhatsApp.
+- **Solicitar cotización** abre el formulario sin plan preseleccionado y exige elegir uno.
+- Los botones **Consultar por WhatsApp** de planes, mantenimiento, servicios adicionales y cierre abren `https://wa.me/50372877953`.
+- La tabla de comparación se puede desplazar horizontalmente en móvil y la página no genera desbordamiento horizontal.
+- El diálogo de cotización se revisó a 390 px y 1280 px de ancho.
+- El chat conserva su apertura, mensajes rápidos, formulario de cotización y límites de longitud.
+- La guarda de tema devuelve 200 para las consultas fuera de alcance y de inyección sin llamar al proveedor.
+- La verificación semántica en vivo de Gemini quedó pendiente porque la clave configurada en `.env.local` devuelve HTTP 401 (`API key not valid`). El endpoint responde `503 PROVIDER_UNAVAILABLE`; no se modificó ni se expuso la clave.
+- El chatbot no aparece en las rutas de demostración.
 
 ## Comportamiento ante fallos
 

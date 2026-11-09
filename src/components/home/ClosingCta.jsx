@@ -21,6 +21,13 @@ export default function ClosingCta() {
               Ver las demostraciones
               <Icon name="arrow-right" size={18} />
             </a>
+            <a
+              className="studio-button studio-button--outline-light"
+              href="#planes"
+            >
+              Ver planes y precios
+              <Icon name="arrow-right" size={18} />
+            </a>
             {whatsappHref && (
               <a
                 className="studio-button studio-button--outline-light"

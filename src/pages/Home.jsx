@@ -1,6 +1,7 @@
 import SiteHeader from '../components/home/SiteHeader';
 import HomeHero from '../components/home/HomeHero';
 import DemoShowcase from '../components/home/DemoShowcase';
+import PricingSection from '../components/home/PricingSection';
 import ProcessSection from '../components/home/ProcessSection';
 import ValueSection from '../components/home/ValueSection';
 import ClosingCta from '../components/home/ClosingCta';
@@ -12,7 +13,7 @@ export default function Home() {
   useDocumentMeta({
     title: `${agency.name} — Sitios web para negocios de El Salvador`,
     description:
-      'Diseño de páginas web para negocios de El Salvador. Explora demostraciones para restaurantes, cafeterías, barberías, servicios técnicos y más.',
+      'Diseño de páginas web para negocios de El Salvador. Explora demostraciones y conoce planes desde $149 para landing pages, sitios profesionales y catálogos digitales.',
     robots: 'index,follow',
   });
 
@@ -25,6 +26,7 @@ export default function Home() {
       <main id="contenido">
         <HomeHero />
         <DemoShowcase />
+        <PricingSection />
         <ProcessSection />
         <ValueSection />
         <ClosingCta />

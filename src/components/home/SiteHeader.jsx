@@ -6,6 +6,7 @@ import { buildAgencyWhatsAppUrl } from '../../utils/agency';
 
 const navigation = [
   { href: '#demos', label: 'Demos' },
+  { href: '#planes', label: 'Planes' },
   { href: '#proceso', label: 'Proceso' },
   { href: '#plantilla', label: 'La plantilla' },
 ];

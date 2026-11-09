@@ -35,6 +35,9 @@ export default function SiteFooter() {
           <nav className="studio-footer__nav" aria-label="Navegación del pie de página">
             <span className="studio-footer__title">Explorar</span>
             <a href="#demos">Demostraciones</a>
+            <a href="#planes">Planes y precios</a>
+            <a href="#mantenimiento">Mantenimiento</a>
+            <a href="#servicios-adicionales">Servicios adicionales</a>
             <a href="#proceso">Proceso</a>
             <a href="#plantilla">La plantilla</a>
           </nav>
