@@ -3,7 +3,6 @@ import Icon from '../Icon';
 import { agency } from '../../data/agency';
 import { demoBusinesses } from '../../data/demoBusinesses';
 import { buildAgencyWhatsAppUrl } from '../../utils/agency';
-import { getContrastColor } from '../../utils/theme';
 
 function DemoPreview({ business, className = '' }) {
   return (
@@ -13,16 +12,6 @@ function DemoPreview({ business, className = '' }) {
     >
       <img src={business.hero.image.src} alt="" aria-hidden="true" />
       <span className="hero-mosaic__shade" aria-hidden="true" />
-      <span
-        className="hero-mosaic__logo"
-        style={{
-          backgroundColor: business.theme.primary,
-          color: getContrastColor(business.theme.primary),
-        }}
-        aria-hidden="true"
-      >
-        {business.logo.text}
-      </span>
       <span className="hero-mosaic__caption">
         <span className="hero-mosaic__sector">{business.sector}</span>
         <strong>{business.name}</strong>

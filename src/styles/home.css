@@ -380,21 +380,6 @@
   );
 }
 
-.hero-mosaic__logo {
-  position: absolute;
-  top: 14px;
-  left: 14px;
-  display: grid;
-  width: 37px;
-  height: 37px;
-  place-items: center;
-  border-radius: 11px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
-  font-family: var(--font-display);
-  font-size: 0.95rem;
-  font-weight: 600;
-}
-
 .hero-mosaic__caption {
   position: absolute;
   right: 0;
@@ -1434,15 +1419,6 @@
 
   .hero-mosaic__caption strong {
     font-size: 1.13rem;
-  }
-
-  .hero-mosaic__logo {
-    top: 10px;
-    left: 10px;
-    width: 31px;
-    height: 31px;
-    border-radius: 9px;
-    font-size: 0.8rem;
   }
 
   .hero-mosaic__tile:not(.hero-mosaic__tile--main) .hero-mosaic__caption {
