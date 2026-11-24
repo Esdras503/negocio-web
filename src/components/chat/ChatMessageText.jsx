@@ -6,9 +6,11 @@ const INLINE_PATTERN =
 const BULLET_PATTERN = /^\s*[-*•]\s+(.+)$/;
 const ORDERED_PATTERN = /^\s*(\d+)[.)]\s+(.+)$/;
 const INTERNAL_PATH_PATTERN =
-  /^\/(?:demo\/[a-z0-9-]+|demos\/gimnasio)?\/?$/i;
-const INTERNAL_HASH_PATH_PATTERN = /^\/#(?:demos|proceso|plantilla)$/i;
-const HASH_PATTERN = /^#(?:demos|proceso|plantilla)$/i;
+  /^\/(?:demo\/[a-z0-9-]+|demos\/gimnasio|terminos)?\/?$/i;
+const INTERNAL_HASH_PATH_PATTERN =
+  /^\/#(?:demos|planes|compra-unica|membresias|condiciones-membresia|comparacion|mantenimiento|servicios-adicionales|preguntas|proceso|plantilla)$/i;
+const HASH_PATTERN =
+  /^#(?:demos|planes|compra-unica|membresias|condiciones-membresia|comparacion|mantenimiento|servicios-adicionales|preguntas|proceso|plantilla)$/i;
 
 function hasUnsafeUrlCharacters(value) {
   for (const character of value) {

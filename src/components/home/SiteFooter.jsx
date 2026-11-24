@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import BrandMark from '../BrandMark';
 import Icon from '../Icon';
 import { agency } from '../../data/agency';
@@ -36,10 +37,13 @@ export default function SiteFooter() {
             <span className="studio-footer__title">Explorar</span>
             <a href="#demos">Demostraciones</a>
             <a href="#planes">Planes y precios</a>
+            <a href="#compra-unica">Compra única</a>
+            <a href="#membresias">Membresías</a>
             <a href="#mantenimiento">Mantenimiento</a>
             <a href="#servicios-adicionales">Servicios adicionales</a>
             <a href="#proceso">Proceso</a>
             <a href="#plantilla">La plantilla</a>
+            <Link to="/terminos">Términos y condiciones</Link>
           </nav>
 
           <div className="studio-footer__contact">

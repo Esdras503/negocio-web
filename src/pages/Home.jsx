@@ -13,7 +13,7 @@ export default function Home() {
   useDocumentMeta({
     title: `${agency.name} — Sitios web para negocios de El Salvador`,
     description:
-      'Diseño de páginas web para negocios de El Salvador. Explora demostraciones y conoce planes desde $149 para landing pages, sitios profesionales y catálogos digitales.',
+      'Diseño de páginas web para negocios de El Salvador. Explora demostraciones y conoce planes de compra única y membresías mensuales o anuales para landing pages, sitios profesionales, catálogos y tiendas online.',
     robots: 'index,follow',
   });
 

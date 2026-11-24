@@ -48,8 +48,10 @@ export default function ProcessSection() {
 
         <p className="process-note">
           <Icon name="shield" size={17} />
-          El dominio y el hosting se cotizan aparte. El mantenimiento es
-          opcional y sus condiciones se acuerdan antes de publicar.
+          En compra única, el dominio y el hosting se cotizan aparte. En las
+          membresías, la infraestructura administrada está incluida y el
+          dominio se cobra por separado. El mantenimiento es opcional y sus
+          condiciones se acuerdan antes de publicar.
         </p>
       </div>
     </section>

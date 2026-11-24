@@ -78,6 +78,7 @@ export default function QuoteForm({ onBack }) {
   const [error, setError] = useState('');
   const [opened, setOpened] = useState(false);
   const nameRef = useRef(null);
+  const stepHeadingRef = useRef(null);
 
   const summary = useMemo(() => buildSummary(form), [form]);
   const whatsappHref = useMemo(
@@ -86,8 +87,12 @@ export default function QuoteForm({ onBack }) {
   );
 
   useEffect(() => {
-    nameRef.current?.focus();
-  }, []);
+    if (step === 'review') {
+      stepHeadingRef.current?.focus();
+    } else {
+      nameRef.current?.focus();
+    }
+  }, [step]);
 
   const updateField = (field, value) => {
     setForm((current) => ({ ...current, [field]: value }));
@@ -129,7 +134,7 @@ export default function QuoteForm({ onBack }) {
 
         <div className="chat-quote__heading">
           <span className="chat-quote__eyebrow">Paso 2 de 2</span>
-          <h3>Revisa tu solicitud</h3>
+          <h3 ref={stepHeadingRef} tabIndex={-1}>Revisa tu solicitud</h3>
           <p>
             Este es el mensaje que se preparará para WhatsApp. Aún no se ha
             enviado nada.

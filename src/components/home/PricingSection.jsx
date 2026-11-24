@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Icon from '../Icon';
 import PricingQuoteDialog from './PricingQuoteDialog';
 import { agency } from '../../data/agency';
@@ -6,12 +7,19 @@ import {
   addOns,
   addOnsNote,
   comparisonRows,
-  formatAddOnPrice,
+  formatMembershipAnnualPrice,
+  formatMembershipFirstMonth,
+  formatMembershipMonthlyPrice,
+  formatMembershipSavings,
   formatMaintenancePrice,
   formatPlanPrice,
   formatUsd,
+  MEMBERSHIP_ACTIVATION_FEE,
+  MEMBERSHIP_TERM_MONTHS,
   maintenanceNote,
   maintenancePlans,
+  membershipConditions,
+  membershipPlans,
   pricingFaqs,
   pricingNotes,
   pricingPlans,
@@ -20,6 +28,7 @@ import { buildAgencyWhatsAppUrl } from '../../utils/agency';
 import {
   buildAddOnWhatsAppMessage,
   buildMaintenanceWhatsAppMessage,
+  buildMembershipWhatsAppMessage,
   buildPlanWhatsAppMessage,
 } from '../../utils/pricing';
 import '../../styles/pricing.css';
@@ -77,7 +86,7 @@ function PlanCard({ plan, onContract }) {
         <button
           className="pricing-card__cta"
           type="button"
-          onClick={() => onContract(plan.id)}
+          onClick={() => onContract({ planId: plan.id, mode: 'one-time' })}
         >
           Contratar este plan
           <Icon name="arrow-right" size={16} />
@@ -100,16 +109,235 @@ function PlanCard({ plan, onContract }) {
   );
 }
 
+function MembershipCard({ plan, period, onContract }) {
+  const isAnnual = period === 'annual';
+  const whatsappHref = buildAgencyWhatsAppUrl(
+    agency,
+    buildMembershipWhatsAppMessage(plan, period),
+  );
+
+  return (
+    <article
+      className="membership-card"
+      aria-labelledby={`membership-plan-${plan.id}`}
+    >
+      <div className="membership-card__top">
+        <span className="membership-card__icon" aria-hidden="true">
+          <Icon name={plan.icon} size={20} />
+        </span>
+        {isAnnual && (
+          <span className="membership-card__saving">
+            Ahorras {formatMembershipSavings(plan)}
+          </span>
+        )}
+      </div>
+
+      <div className="membership-card__heading">
+        <span className="pricing-card__label">Membresía</span>
+        <h4 id={`membership-plan-${plan.id}`}>{plan.name}</h4>
+        <p>{plan.tagline}</p>
+      </div>
+
+      <div className="membership-card__price">
+        <span>{isAnnual ? 'Precio anual' : 'Desde el segundo mes'}</span>
+        <strong>
+          {isAnnual
+            ? formatMembershipAnnualPrice(plan)
+            : formatMembershipMonthlyPrice(plan)}
+        </strong>
+      </div>
+
+      {isAnnual ? (
+        <>
+          <p className="membership-card__detail">
+            {plan.annual.months} meses de servicio · sin costo de activación.
+          </p>
+          <p className="membership-card__comparison">
+            {plan.annual.months} mensualidades normales:{' '}
+            {formatUsd(plan.annual.regularTotal)}. Ahorras{' '}
+            {formatMembershipSavings(plan)}.
+          </p>
+          <p className="membership-card__alternative">
+            Mensual: {formatMembershipFirstMonth(plan)} el primer mes; luego{' '}
+            {formatMembershipMonthlyPrice(plan)}.
+          </p>
+        </>
+      ) : (
+        <>
+          <p className="membership-card__detail">
+            Primer mes: <strong>{formatMembershipFirstMonth(plan)}</strong> ·
+            incluye {formatUsd(plan.monthly.activationFee)} de activación única.
+          </p>
+          <p className="membership-card__alternative">
+            Anual: {formatMembershipAnnualPrice(plan)} · ahorras{' '}
+            {formatMembershipSavings(plan)}.
+          </p>
+        </>
+      )}
+
+      <dl className="membership-card__meta">
+        <div>
+          <dt>Infraestructura incluida</dt>
+          <dd>{plan.infrastructure}</dd>
+        </div>
+        <div>
+          <dt>Base de datos</dt>
+          <dd>{plan.database}</dd>
+        </div>
+      </dl>
+
+      <ul className="membership-card__features">
+        {plan.features.map((feature) => (
+          <li key={feature}>
+            <Icon name="check" size={15} />
+            <span>{feature}</span>
+          </li>
+        ))}
+      </ul>
+
+      <p className="membership-card__not-included">
+        <strong>Importante:</strong> {plan.notIncluded.join(' ')}
+      </p>
+
+      <div className="membership-card__actions">
+        <button
+          className="membership-card__cta"
+          type="button"
+          onClick={() =>
+            onContract({
+              planId: plan.id,
+              mode: 'membership',
+              billingPeriod: period,
+            })
+          }
+        >
+          Contratar este plan
+          <Icon name="arrow-right" size={16} />
+        </button>
+
+        {whatsappHref && (
+          <a
+            className="membership-card__whatsapp"
+            href={whatsappHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Consultar por WhatsApp la ${plan.fullName} en modalidad ${isAnnual ? 'anual' : 'mensual'}`}
+          >
+            <Icon name="whatsapp" size={16} />
+            Consultar por WhatsApp
+          </a>
+        )}
+      </div>
+    </article>
+  );
+}
+
+function MembershipConditions() {
+  return (
+    <div className="membership-conditions" id="condiciones-membresia">
+      <div className="membership-conditions__intro">
+        <span className="studio-eyebrow">Condiciones</span>
+        <h4>Cómo funciona la membresía</h4>
+        <p>
+          La membresía mensual y la anual tienen reglas distintas. Estas
+          condiciones se aplican antes de contratar y se detallan en los
+          términos y condiciones.
+        </p>
+        <Link className="membership-conditions__link" to="/terminos">
+          Leer términos y condiciones
+          <Icon name="arrow-up-right" size={15} />
+        </Link>
+      </div>
+
+      <ul className="membership-conditions__list">
+        {membershipConditions.map((condition) => (
+          <li key={condition}>
+            <Icon name="check" size={15} />
+            <span>{condition}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function MembershipSection({ period, onPeriodChange, onContract }) {
+  const isAnnual = period === 'annual';
+
+  return (
+    <div className="pricing-memberships" id="membresias">
+      <div className="pricing-subheading pricing-memberships__heading">
+        <div>
+          <span className="studio-eyebrow">Membresías Nexobyte Web</span>
+          <h3>Tu página web, mes a mes o por año</h3>
+          <p>
+            Elige la modalidad que mejor se adapte a tu negocio. El dominio se
+            cobra por separado y los servicios externos se cotizan aparte.
+          </p>
+        </div>
+
+        <div
+          className="pricing-billing-switch"
+          role="group"
+          aria-label="Modalidad de pago de la membresía"
+        >
+          <button
+            className={!isAnnual ? 'is-active' : ''}
+            type="button"
+            aria-pressed={!isAnnual}
+            onClick={() => onPeriodChange('monthly')}
+          >
+            Mensual
+          </button>
+          <button
+            className={isAnnual ? 'is-active' : ''}
+            type="button"
+            aria-pressed={isAnnual}
+            onClick={() => onPeriodChange('annual')}
+          >
+            Anual
+          </button>
+        </div>
+      </div>
+
+      <div
+        className={`pricing-period-note pricing-period-note--${period}`}
+        role="status"
+      >
+        <Icon name={isAnnual ? 'shield' : 'calendar'} size={20} />
+        <p>
+          {isAnnual
+            ? `¡Ahorra pagando por adelantado! Obtén ${MEMBERSHIP_TERM_MONTHS} meses de servicio a un precio especial y sin costo de activación. El precio anual equivale aproximadamente a 11 mensualidades normales.`
+            : `Primer mes incluye ${formatUsd(MEMBERSHIP_ACTIVATION_FEE)} de activación. Desde el segundo mes pagas únicamente la mensualidad normal.`}
+        </p>
+      </div>
+
+      <div className="membership-grid">
+        {membershipPlans.map((plan) => (
+          <MembershipCard
+            key={plan.id}
+            plan={plan}
+            period={period}
+            onContract={onContract}
+          />
+        ))}
+      </div>
+
+      <MembershipConditions />
+    </div>
+  );
+}
+
 function PlanComparison() {
   return (
     <div className="pricing-comparison" id="comparacion">
       <div className="pricing-subheading">
         <div>
           <span className="studio-eyebrow">Comparación</span>
-          <h3>Compara los planes</h3>
+          <h3>Compara los planes de compra única</h3>
           <p>
-            Las diferencias principales, sin perder de vista qué incluye cada
-            opción.
+            Las diferencias principales entre los planes de pago único, sin
+            perder de vista qué incluye cada opción.
           </p>
         </div>
         <p className="pricing-comparison__hint">
@@ -173,10 +401,10 @@ function MaintenanceSection() {
       <div className="pricing-subheading">
         <div>
           <span className="studio-eyebrow">Mantenimiento</span>
-          <h3>Mantenimiento mensual</h3>
+          <h3>Mantenimiento opcional</h3>
           <p>
-            Un acompañamiento opcional para mantener tu sitio actualizado. No es
-            obligatorio para contratar un plan de creación.
+            Un acompañamiento para mantener tu sitio actualizado. Es un servicio
+            opcional y sus condiciones se confirman en la cotización.
           </p>
         </div>
         <span className="pricing-optional">Opcional</span>
@@ -256,7 +484,7 @@ function AddOnsSection() {
               </span>
               <div className="addon-item__body">
                 <h4>{addOn.name}</h4>
-                <strong>{formatAddOnPrice(addOn)}</strong>
+                <strong>{addOn.pricePrefix ? `${addOn.pricePrefix} ` : ''}{formatUsd(addOn.price)}</strong>
               </div>
               {whatsappHref && (
                 <a
@@ -295,7 +523,7 @@ function PricingFaq({ onQuote }) {
         <button
           className="pricing-faq__cta"
           type="button"
-          onClick={() => onQuote('')}
+          onClick={() => onQuote()}
         >
           Solicitar cotización
           <Icon name="arrow-right" size={16} />
@@ -329,11 +557,20 @@ function PricingFaq({ onQuote }) {
 }
 
 export default function PricingSection() {
-  const [quotePlanId, setQuotePlanId] = useState('');
+  const [membershipPeriod, setMembershipPeriod] = useState('monthly');
+  const [quoteSelection, setQuoteSelection] = useState({
+    planId: '',
+    mode: 'one-time',
+    billingPeriod: 'monthly',
+  });
   const [isQuoteOpen, setIsQuoteOpen] = useState(false);
 
-  const openQuote = (planId = '') => {
-    setQuotePlanId(planId);
+  const openQuote = (selection = {}) => {
+    setQuoteSelection({
+      planId: selection.planId ?? '',
+      mode: selection.mode ?? 'one-time',
+      billingPeriod: selection.billingPeriod ?? membershipPeriod,
+    });
     setIsQuoteOpen(true);
   };
 
@@ -363,7 +600,7 @@ export default function PricingSection() {
             <button
               className="studio-button"
               type="button"
-              onClick={() => openQuote('')}
+              onClick={() => openQuote()}
             >
               Solicitar cotización
               <Icon name="arrow-right" size={17} />
@@ -382,56 +619,94 @@ export default function PricingSection() {
           </div>
         </div>
 
-        <div className="pricing-grid">
-          {standardPlans.map((plan) => (
-            <PlanCard key={plan.id} plan={plan} onContract={openQuote} />
-          ))}
+        <div className="pricing-mode-links" aria-label="Modalidades de contratación">
+          <a className="pricing-mode-link" href="#compra-unica">
+            <span className="pricing-mode-link__number">01</span>
+            <span>
+              <strong>Compra única</strong>
+              <small>Pagas una vez por el diseño y desarrollo.</small>
+            </span>
+            <Icon name="arrow-right" size={17} />
+          </a>
+          <a className="pricing-mode-link" href="#membresias">
+            <span className="pricing-mode-link__number">02</span>
+            <span>
+              <strong>Membresías Nexobyte Web</strong>
+              <small>Elige pago mensual o anual anticipado.</small>
+            </span>
+            <Icon name="arrow-right" size={17} />
+          </a>
         </div>
 
-        {customPlan && (
-          <div className="pricing-custom">
-            <div className="pricing-custom__content">
-              <span className="studio-eyebrow">A medida</span>
-              <h3>{customPlan.fullName}</h3>
-              <p>{customPlan.description}</p>
-              <ul className="pricing-custom__features">
-                {customPlan.features.map((feature) => (
-                  <li key={feature}>
-                    <Icon name="check" size={15} />
-                    <span>{feature}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="pricing-custom__aside">
-              <div className="pricing-custom__price">
-                <span>Desde</span>
-                <strong>{formatUsd(customPlan.price)}</strong>
-                <small>USD · {customPlan.priceNote}</small>
-              </div>
-              <button
-                className="studio-button"
-                type="button"
-                onClick={() => openQuote(customPlan.id)}
-              >
-                Solicitar cotización
-                <Icon name="arrow-right" size={17} />
-              </button>
-              {customWhatsappHref && (
-                <a
-                  className="pricing-custom__whatsapp"
-                  href={customWhatsappHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Icon name="whatsapp" size={16} />
-                  Consultar por WhatsApp
-                </a>
-              )}
-            </div>
+        <div className="pricing-tier" id="compra-unica">
+          <div className="pricing-tier__heading">
+            <span className="studio-eyebrow">Compra única</span>
+            <h3>Páginas web con pago único</h3>
+            <p>
+              Conserva el diseño y desarrollo con un solo pago. El dominio, el
+              alojamiento y los servicios externos se cotizan aparte.
+            </p>
           </div>
-        )}
+
+          <div className="pricing-grid">
+            {standardPlans.map((plan) => (
+              <PlanCard key={plan.id} plan={plan} onContract={openQuote} />
+            ))}
+          </div>
+
+          {customPlan && (
+            <div className="pricing-custom">
+              <div className="pricing-custom__content">
+                <span className="studio-eyebrow">A medida</span>
+                <h3>{customPlan.fullName}</h3>
+                <p>{customPlan.description}</p>
+                <ul className="pricing-custom__features">
+                  {customPlan.features.map((feature) => (
+                    <li key={feature}>
+                      <Icon name="check" size={15} />
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="pricing-custom__aside">
+                <div className="pricing-custom__price">
+                  <span>Desde</span>
+                  <strong>{formatUsd(customPlan.price)}</strong>
+                  <small>USD · {customPlan.priceNote}</small>
+                </div>
+                <button
+                  className="studio-button"
+                  type="button"
+                  onClick={() =>
+                    openQuote({ planId: customPlan.id, mode: 'one-time' })
+                  }
+                >
+                  Solicitar cotización
+                  <Icon name="arrow-right" size={17} />
+                </button>
+                {customWhatsappHref && (
+                  <a
+                    className="pricing-custom__whatsapp"
+                    href={customWhatsappHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Icon name="whatsapp" size={16} />
+                    Consultar por WhatsApp
+                  </a>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+
+        <MembershipSection
+          period={membershipPeriod}
+          onPeriodChange={setMembershipPeriod}
+          onContract={openQuote}
+        />
 
         <div className="pricing-disclaimer" role="note">
           <Icon name="shield" size={19} />
@@ -448,7 +723,9 @@ export default function PricingSection() {
 
       {isQuoteOpen && (
         <PricingQuoteDialog
-          initialPlanId={quotePlanId}
+          initialPlanId={quoteSelection.planId}
+          initialMode={quoteSelection.mode}
+          initialBillingPeriod={quoteSelection.billingPeriod}
           onClose={closeQuote}
         />
       )}

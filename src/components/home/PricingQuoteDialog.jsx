@@ -1,10 +1,14 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import DemoDialog from '../DemoDialog';
 import Icon from '../Icon';
 import { agency } from '../../data/agency';
 import {
+  formatMembershipPriceSummary,
   formatPlanPrice,
+  formatUsd,
+  getMembershipById,
   getPlanById,
+  membershipPlans,
   pricingPlans,
 } from '../../data/pricing';
 import {
@@ -13,7 +17,28 @@ import {
 } from '../../data/quoteOptions';
 import { buildAgencyWhatsAppUrl } from '../../utils/agency';
 
+const BILLING_OPTIONS = [
+  {
+    id: 'one-time',
+    label: 'Compra única',
+    mode: 'one-time',
+  },
+  {
+    id: 'monthly',
+    label: 'Membresía mensual',
+    mode: 'membership',
+    period: 'monthly',
+  },
+  {
+    id: 'annual',
+    label: 'Membresía anual',
+    mode: 'membership',
+    period: 'annual',
+  },
+];
+
 const EMPTY_FORM = {
+  billingChoice: 'one-time',
   planId: '',
   name: '',
   businessName: '',
@@ -23,20 +48,69 @@ const EMPTY_FORM = {
   preferredContact: 'WhatsApp',
 };
 
-function makeInitialForm(initialPlanId) {
+function getBillingOption(billingChoice) {
+  return (
+    BILLING_OPTIONS.find((option) => option.id === billingChoice) ??
+    BILLING_OPTIONS[0]
+  );
+}
+
+function getInitialBillingChoice(initialMode, initialBillingPeriod) {
+  if (initialMode !== 'membership') return 'one-time';
+  return initialBillingPeriod === 'annual' ? 'annual' : 'monthly';
+}
+
+function makeInitialForm(initialPlanId, initialMode, initialBillingPeriod) {
+  const billingChoice = getInitialBillingChoice(
+    initialMode,
+    initialBillingPeriod,
+  );
+  const billingOption = getBillingOption(billingChoice);
+  const initialPlan =
+    billingOption.mode === 'membership'
+      ? getMembershipById(initialPlanId)
+      : getPlanById(initialPlanId);
+
   return {
     ...EMPTY_FORM,
-    planId: getPlanById(initialPlanId)?.id ?? '',
+    billingChoice,
+    planId: initialPlan?.id ?? '',
   };
+}
+
+function getSelectedPlan(form) {
+  const option = getBillingOption(form.billingChoice);
+  return option.mode === 'membership'
+    ? getMembershipById(form.planId)
+    : getPlanById(form.planId);
+}
+
+function getMembershipOptionLabel(plan, period) {
+  if (period === 'annual') {
+    return `${formatUsd(plan.annual.price)}/año`;
+  }
+
+  return `${formatUsd(plan.monthly.recurring)}/mes · primer mes ${formatUsd(plan.monthly.firstMonth)}`;
 }
 
 function buildSummaryRows(form, selectedPlan) {
   const rows = [];
+  const billingOption = getBillingOption(form.billingChoice);
+
+  rows.push({ label: 'Modalidad', value: billingOption.label });
 
   if (selectedPlan) {
+    const planValue =
+      billingOption.mode === 'membership'
+        ? `${selectedPlan.fullName} — ${formatMembershipPriceSummary(selectedPlan, billingOption.period)}`
+        : `${selectedPlan.fullName} — ${formatPlanPrice(selectedPlan)} (${selectedPlan.priceNote})`;
+
     rows.push({
-      label: 'Plan de interés',
-      value: `${selectedPlan.fullName} — ${formatPlanPrice(selectedPlan)} (${selectedPlan.priceNote})`,
+      label:
+        billingOption.mode === 'membership'
+          ? 'Plan de membresía'
+          : 'Plan de interés',
+      value: planValue,
     });
   }
   if (form.name.trim()) rows.push({ label: 'Nombre', value: form.name.trim() });
@@ -59,13 +133,28 @@ function buildSummaryRows(form, selectedPlan) {
   return rows;
 }
 
-export default function PricingQuoteDialog({ initialPlanId = '', onClose }) {
-  const [form, setForm] = useState(() => makeInitialForm(initialPlanId));
+export default function PricingQuoteDialog({
+  initialPlanId = '',
+  initialMode = 'one-time',
+  initialBillingPeriod = 'monthly',
+  onClose,
+}) {
+  const [form, setForm] = useState(() =>
+    makeInitialForm(initialPlanId, initialMode, initialBillingPeriod),
+  );
   const [step, setStep] = useState('form');
   const [error, setError] = useState('');
   const [opened, setOpened] = useState(false);
+  const stepHeadingRef = useRef(null);
 
-  const selectedPlan = getPlanById(form.planId);
+  useEffect(() => {
+    stepHeadingRef.current?.focus();
+  }, [step]);
+
+  const billingOption = getBillingOption(form.billingChoice);
+  const isMembership = billingOption.mode === 'membership';
+  const selectedPlan = getSelectedPlan(form);
+  const planOptions = isMembership ? membershipPlans : pricingPlans;
   const summaryRows = useMemo(
     () => buildSummaryRows(form, selectedPlan),
     [form, selectedPlan],
@@ -95,11 +184,25 @@ export default function PricingQuoteDialog({ initialPlanId = '', onClose }) {
     if (opened) setOpened(false);
   };
 
+  const updateBillingChoice = (billingChoice) => {
+    setForm((current) => ({
+      ...current,
+      billingChoice,
+      planId: '',
+    }));
+    if (error) setError('');
+    if (opened) setOpened(false);
+  };
+
   const handleReview = (event) => {
     event.preventDefault();
 
     if (!selectedPlan) {
-      setError('Selecciona un plan para preparar la solicitud.');
+      setError(
+        isMembership
+          ? 'Selecciona una membresía para preparar la solicitud.'
+          : 'Selecciona un plan para preparar la solicitud.',
+      );
       return;
     }
 
@@ -140,7 +243,7 @@ export default function PricingQuoteDialog({ initialPlanId = '', onClose }) {
 
           <div className="pricing-quote__heading">
             <span className="pricing-quote__eyebrow">Paso 2 de 2</span>
-            <h3 id="pricing-quote-title">Revisa tu solicitud</h3>
+            <h3 id="pricing-quote-title" ref={stepHeadingRef} tabIndex={-1}>Revisa tu solicitud</h3>
             <p>
               Este es el mensaje que se preparará para WhatsApp. Aún no se ha
               enviado nada.
@@ -202,16 +305,34 @@ export default function PricingQuoteDialog({ initialPlanId = '', onClose }) {
       <div className="pricing-quote">
         <div className="pricing-quote__heading">
           <span className="pricing-quote__eyebrow">Paso 1 de 2</span>
-          <h3 id="pricing-quote-title">Solicita tu cotización</h3>
+          <h3 id="pricing-quote-title" ref={stepHeadingRef} tabIndex={-1}>Solicita tu cotización</h3>
           <p>
-            Elige el plan y completa lo que quieras compartir. Revisarás el
-            resumen antes de abrir WhatsApp.
+            Elige la modalidad, el plan y completa lo que quieras compartir.
+            Revisarás el resumen antes de abrir WhatsApp.
           </p>
         </div>
 
         <form className="pricing-quote__form" onSubmit={handleReview} noValidate>
           <div className="pricing-quote__field pricing-quote__field--full">
-            <label htmlFor="pricing-quote-plan">Plan seleccionado</label>
+            <label htmlFor="pricing-quote-billing">Modalidad</label>
+            <select
+              id="pricing-quote-billing"
+              name="billing"
+              value={form.billingChoice}
+              onChange={(event) => updateBillingChoice(event.target.value)}
+            >
+              {BILLING_OPTIONS.map((option) => (
+                <option key={option.id} value={option.id}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="pricing-quote__field pricing-quote__field--full">
+            <label htmlFor="pricing-quote-plan">
+              {isMembership ? 'Membresía seleccionada' : 'Plan seleccionado'}
+            </label>
             <select
               id="pricing-quote-plan"
               name="plan"
@@ -219,16 +340,24 @@ export default function PricingQuoteDialog({ initialPlanId = '', onClose }) {
               onChange={(event) => updateField('planId', event.target.value)}
               required
             >
-              <option value="">Selecciona un plan</option>
-              {pricingPlans.map((plan) => (
+              <option value="">
+                {isMembership
+                  ? 'Selecciona una membresía'
+                  : 'Selecciona un plan'}
+              </option>
+              {planOptions.map((plan) => (
                 <option key={plan.id} value={plan.id}>
-                  {plan.fullName} — {formatPlanPrice(plan)}
+                  {isMembership
+                    ? `${plan.fullName} — ${getMembershipOptionLabel(plan, billingOption.period)}`
+                    : `${plan.fullName} — ${formatPlanPrice(plan)}`}
                 </option>
               ))}
             </select>
             {selectedPlan && (
               <small className="pricing-quote__helper">
-                {selectedPlan.priceNote}. {selectedPlan.description}
+                {isMembership
+                  ? `${formatMembershipPriceSummary(selectedPlan, billingOption.period)} ${selectedPlan.description}`
+                  : `${selectedPlan.priceNote}. ${selectedPlan.description}`}
               </small>
             )}
           </div>

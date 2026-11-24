@@ -9,7 +9,7 @@ const MAX_MESSAGE_LENGTH = 1_000;
 const CLIENT_TIMEOUT_MS = 30_000;
 
 const WELCOME_MESSAGE =
-  '¡Hola! 👋 Soy el Asistente Nexobyte. Estoy aquí para ayudarte a descubrir cómo una página web puede impulsar tu negocio. También puedo contarte nuestros planes y precios. ¿Qué tipo de negocio tienes o qué te gustaría crear?';
+  '¡Hola! 👋 Soy el Asistente Nexobyte. Estoy aquí para ayudarte a descubrir cómo una página web puede impulsar tu negocio. También puedo contarte nuestros planes de compra única y membresías mensuales o anuales. ¿Qué tipo de negocio tienes o qué te gustaría crear?';
 
 const QUICK_PROMPTS = [
   {
@@ -23,6 +23,10 @@ const QUICK_PROMPTS = [
   {
     label: 'Ver planes y precios',
     message: '¿Cuáles son los planes y precios de Nexobyte?',
+  },
+  {
+    label: 'Ver membresías',
+    message: '¿Cómo funcionan las membresías mensuales y anuales?',
   },
   {
     label: 'Quiero una página web',
@@ -369,6 +373,7 @@ export default function ChatWidget() {
         aria-modal="false"
         aria-labelledby="nexobyte-chat-title"
         aria-hidden={!isOpen}
+        inert={!isOpen}
         tabIndex={-1}
       >
         <header className="chat-widget__header">

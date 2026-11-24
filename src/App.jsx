@@ -3,6 +3,7 @@ import ScrollManager from './components/ScrollManager';
 import ChatWidget from './components/chat/ChatWidget';
 import Home from './pages/Home';
 import DemoPage from './pages/DemoPage';
+import Terms from './pages/Terms';
 import NotFound from './pages/NotFound';
 
 export default function App() {
@@ -17,6 +18,7 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/demo/:slug" element={<DemoPage />} />
         <Route path="/demos/gimnasio" element={<DemoPage demoId="iron-district" />} />
+        <Route path="/terminos" element={<Terms />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       {!isDemoRoute && <ChatWidget />}

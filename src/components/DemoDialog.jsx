@@ -39,17 +39,23 @@ export default function DemoDialog({
 
       if (event.key !== 'Tab' || !panelRef.current) return;
       const focusable = Array.from(panelRef.current.querySelectorAll(FOCUSABLE)).filter(
-        (element) => element.offsetParent !== null,
+        (element) =>
+          element.getClientRects().length > 0 &&
+          !element.closest('[inert], [aria-hidden="true"]'),
       );
-      if (focusable.length === 0) return;
+      if (focusable.length === 0) {
+        event.preventDefault();
+        panelRef.current.focus();
+        return;
+      }
 
       const first = focusable[0];
       const last = focusable[focusable.length - 1];
 
-      if (event.shiftKey && document.activeElement === first) {
+      if (event.shiftKey && (document.activeElement === first || !panelRef.current.contains(document.activeElement))) {
         event.preventDefault();
         last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
+      } else if (!event.shiftKey && (document.activeElement === last || !panelRef.current.contains(document.activeElement))) {
         event.preventDefault();
         first.focus();
       }
@@ -61,7 +67,9 @@ export default function DemoDialog({
       window.clearTimeout(focusTimer);
       document.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = originalOverflow;
-      previousFocus.current?.focus?.();
+      if (previousFocus.current?.isConnected) {
+        previousFocus.current.focus?.({ preventScroll: true });
+      }
     };
   }, [open, onClose]);
 
@@ -80,6 +88,7 @@ export default function DemoDialog({
         aria-modal="true"
         aria-labelledby={titleId}
         ref={panelRef}
+        tabIndex={-1}
       >
         <button
           className="demo-dialog__close"

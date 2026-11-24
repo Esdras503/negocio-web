@@ -1,7 +1,7 @@
 import { createHash, randomUUID } from 'node:crypto';
 import { GoogleGenAI } from '@google/genai';
 import { SYSTEM_PROMPT } from './_lib/nexobyteKnowledge.js';
-import { checkRateLimit } from './_lib/rateLimit.js';
+import { checkRateLimitAsync } from './_lib/rateLimit.js';
 import {
   countWords,
   finishTokenTruncatedReply,
@@ -366,7 +366,23 @@ export default async function handler(req, res) {
     return;
   }
 
-  const rateLimit = checkRateLimit(getClientIp(req));
+  let rateLimit;
+  try {
+    rateLimit = await checkRateLimitAsync(getClientIp(req));
+  } catch (error) {
+    console.error('[chat] rate limit store unavailable', {
+      requestId,
+      name: error?.name,
+    });
+    sendError(
+      res,
+      503,
+      'RATE_LIMIT_UNAVAILABLE',
+      'El asistente no está disponible temporalmente. Intenta de nuevo más tarde.',
+      { 'Retry-After': '5' },
+    );
+    return;
+  }
   const rateHeaders = {
     'X-RateLimit-Limit': String(rateLimit.limit),
     'X-RateLimit-Remaining': String(rateLimit.remaining),
